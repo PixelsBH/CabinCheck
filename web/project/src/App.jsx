@@ -133,20 +133,23 @@ function App() {
   ];
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Layout user={user} notifications={notifications} showDashboard={true} />} />
-        <Route path="/profile" element={<Layout user={user} notifications={notifications} showDashboard={false} />} />
-        <Route 
-          path="/status" 
-          element={
-            <Layout user={user} notifications={notifications}>
-              <StatusInfo />
-            </Layout>
-          } 
-        />
-      </Routes>
-    </Router>
+    <div>
+      hello
+    </div>
+    // <Router>
+    //   <Routes>
+    //     <Route path="/" element={<Layout user={user} notifications={notifications} showDashboard={true} />} />
+    //     <Route path="/profile" element={<Layout user={user} notifications={notifications} showDashboard={false} />} />
+    //     <Route 
+    //       path="/status" 
+    //       element={
+    //         <Layout user={user} notifications={notifications}>
+    //           <StatusInfo />
+    //         </Layout>
+    //       } 
+    //     />
+    //   </Routes>
+    // </Router>
   );
 }
 
