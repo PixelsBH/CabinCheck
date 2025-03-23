@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class AddEventScreen extends StatefulWidget {
+class AddEventScreen extends StateflWidget {
   const AddEventScreen({Key? key}) : super(key: key);
 
   @override
