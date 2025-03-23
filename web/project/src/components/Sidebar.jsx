@@ -1,18 +1,30 @@
 import React from 'react';
-import { LayoutDashboard } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Home, User, Bell, Settings } from 'lucide-react';
 
-const Sidebar = () => {
+function Sidebar() {
   return (
-    <aside className="w-64 bg-neutral-800 rounded-r-3xl p-6 flex flex-col">
-      <div className="bg-white text-black rounded-xl p-3 inline-block mb-8">
-        <h1 className="font-bold text-xl">Cabin Check</h1>
+    <div className="w-64 bg-gray-900 p-6">
+      <div className="space-y-6">
+        <Link to="/" className="flex items-center space-x-3 text-white hover:text-gray-300">
+          <Home size={24} />
+          <span>Dashboard</span>
+        </Link>
+        <Link to="/profile" className="flex items-center space-x-3 text-white hover:text-gray-300">
+          <User size={24} />
+          <span>Profile</span>
+        </Link>
+        <div className="flex items-center space-x-3 text-white hover:text-gray-300 cursor-pointer">
+          <Bell size={24} />
+          <span>Notifications</span>
+        </div>
+        <div className="flex items-center space-x-3 text-white hover:text-gray-300 cursor-pointer">
+          <Settings size={24} />
+          <span>Settings</span>
+        </div>
       </div>
-      <button className="flex items-center gap-2 bg-white/10 text-white rounded-xl p-4 hover:bg-white/20 transition-colors">
-        <LayoutDashboard size={20} />
-        <span className="font-medium">Dashboard</span>
-      </button>
-    </aside>
+    </div>
   );
-};
+}
 
 export default Sidebar;

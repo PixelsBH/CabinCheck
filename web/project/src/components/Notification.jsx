@@ -1,26 +1,42 @@
 import React from 'react';
-import NotificationItem from './NotificationItem';
-import { Bell } from 'lucide-react';
+import PropTypes from 'prop-types';
+import { AlertCircle, Info } from 'lucide-react';
 
-const Notifications = ({ notifications }) => {
+function Notifications({ notifications }) {
   return (
-    <div className="w-96">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2">
-          <h2 className="text-2xl font-bold">NOTIFICATIONS</h2>
-          <Bell size={20} className="text-neutral-400" />
+    <div className="space-y-4">
+      <h3 className="text-xl font-semibold mb-4">Recent Notifications</h3>
+      {notifications.map((notification) => (
+        <div
+          key={notification.id}
+          className="bg-gray-800 rounded-lg p-4 flex items-start space-x-4"
+        >
+          {notification.type === 'urgent' ? (
+            <AlertCircle className="text-red-500" />
+          ) : (
+            <Info className="text-blue-500" />
+          )}
+          <div>
+            <h4 className="font-semibold">{notification.title}</h4>
+            <p className="text-gray-400">{notification.message}</p>
+            <span className="text-sm text-gray-500">{notification.time}</span>
+          </div>
         </div>
-        <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-          {notifications.length} new
-        </span>
-      </div>
-      <div className="space-y-4">
-        {notifications.map((notification) => (
-          <NotificationItem key={notification.id} {...notification} />
-        ))}
-      </div>
+      ))}
     </div>
   );
+}
+
+Notifications.propTypes = {
+  notifications: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      title: PropTypes.string.isRequired,
+      message: PropTypes.string.isRequired,
+      time: PropTypes.string.isRequired,
+      type: PropTypes.string.isRequired,
+    })
+  ).isRequired,
 };
 
 export default Notifications;
