@@ -1,7 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LayoutDashboard, Bell, LogOut, User } from 'lucide-react';
 
-function App() {
+interface User {
+  uid: string;
+  displayName: string;
+  email: string;
+  photoURL: string | null; // Allow null for cases where no photo is available
+}
+
+function Dashboard() {
   const [currentDate] = useState(() => {
     return new Date().toLocaleDateString('en-US', {
       year: 'numeric',
@@ -11,7 +18,8 @@ function App() {
   });
 
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-  
+  const [user, setUser] = useState<User | null>(null);
+
   const notifications = [
     {
       id: 1,
@@ -36,15 +44,27 @@ function App() {
     }
   ];
 
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
   const handleProfileClick = () => {
     setShowProfileMenu(!showProfileMenu);
   };
 
   const handleClickOutside = (e: React.MouseEvent) => {
-    const target = e.target as HTMLElement;
-    if (!target.closest('.profile-menu')) {
+    const target = e.target as HTMLElement | null;
+    if (target && !target.closest('.profile-menu')) {
       setShowProfileMenu(false);
     }
+  };
+
+  const getUserInitials = (name: string): string => {
+    const [firstName, lastName] = name.split(' ');
+    return `${firstName?.[0] || ''}${lastName?.[0] || ''}`.toUpperCase();
   };
 
   return (
@@ -76,14 +96,20 @@ function App() {
             className="flex items-center bg-neutral-800 rounded-full p-2 pr-4 gap-3 cursor-pointer hover:bg-neutral-700 transition-colors"
             onClick={handleProfileClick}
           >
-            <img
-              src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=100&h=100&fit=crop"
-              alt="Profile"
-              className="w-10 h-10 rounded-full object-cover"
-            />
+            {user?.photoURL ? (
+              <img
+                src={user.photoURL}
+                alt="Profile"
+                className="w-10 h-10 rounded-full object-cover"
+              />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-neutral-600 flex items-center justify-center text-white font-bold">
+                {user?.displayName ? getUserInitials(user.displayName) : 'G'}
+              </div>
+            )}
             <div>
-              <h3 className="font-medium">John Doe</h3>
-              <p className="text-sm text-neutral-400">3rd year</p>
+              <h3 className="font-medium">{user?.displayName || "Guest"}</h3>
+              <p className="text-sm text-neutral-400">{user?.email || "No email"}</p>
             </div>
           </div>
 
@@ -110,7 +136,9 @@ function App() {
               <p className="text-neutral-400 mb-2">{currentDate}</p>
               <div className="flex justify-between items-start">
                 <div>
-                  <h2 className="text-4xl font-bold mb-2">Welcome back, John!</h2>
+                  <h2 className="text-4xl font-bold mb-2">
+                    Welcome back, {user?.displayName || "Guest"}!
+                  </h2>
                   <p className="text-neutral-400">Always stay updated in your student portal</p>
                 </div>
                 <div className="relative">
@@ -167,4 +195,4 @@ function App() {
   );
 }
 
-export default App;
+export default Dashboard;

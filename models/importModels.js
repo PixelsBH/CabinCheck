@@ -1,4 +1,5 @@
-require("./User");
+require("./Teacher");
+require("./Student");
 require("./Schedule");
 require("./Notification");
 require("./Meeting");
