@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Login from './Login.tsx'; 
-import Dashboard from './Dashboard.tsx'; 
+import Dashboard from './Dashboard'; 
 
 function App() {
   return (

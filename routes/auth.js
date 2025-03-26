@@ -1,6 +1,6 @@
-const express = require("express");
-const Teacher = require("../models/Teacher");
-const Student = require("../models/Student");
+import express from "express";
+import Teacher from "../models/Teacher.js";
+import Student from "../models/Student.js";
 
 const router = express.Router();
 
@@ -44,4 +44,4 @@ router.post("/login", async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;

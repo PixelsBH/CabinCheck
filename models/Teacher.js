@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const TeacherSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -8,4 +8,6 @@ const TeacherSchema = new mongoose.Schema({
   schedule: [{ type: mongoose.Schema.Types.ObjectId, ref: "Schedule" }],
 });
 
-module.exports = mongoose.model("Teacher", TeacherSchema);
+const Teacher = mongoose.model("Teacher", TeacherSchema);
+
+export default Teacher;

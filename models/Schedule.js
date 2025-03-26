@@ -1,14 +1,16 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const ScheduleSchema = new mongoose.Schema({
   teacher: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  title: { type: String, required: true },  // e.g., "Data Structures", "Research Meeting"
+  title: { type: String, required: true },
   type: { type: String, enum: ["Class", "Meeting", "Office Hours", "Custom"], required: true },
   date: { type: Date, required: true },
-  startTime: { type: String, required: true }, // "10:00 AM"
-  endTime: { type: String, required: true },   // "11:30 AM"
+  startTime: { type: String, required: true },
+  endTime: { type: String, required: true },
   location: { type: String, default: "" },
   status: { type: String, enum: ["Scheduled", "Completed", "Cancelled"], default: "Scheduled" },
 });
 
-module.exports = mongoose.model("Schedule", ScheduleSchema);
+const Schedule = mongoose.model("Schedule", ScheduleSchema);
+
+export default Schedule;

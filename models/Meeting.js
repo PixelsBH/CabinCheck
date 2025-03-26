@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const MeetingSchema = new mongoose.Schema({
   teacher: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
@@ -9,4 +9,6 @@ const MeetingSchema = new mongoose.Schema({
   status: { type: String, enum: ["Pending", "Approved", "Rejected"], default: "Pending" },
 });
 
-module.exports = mongoose.model("Meeting", MeetingSchema);
+const Meeting = mongoose.model("Meeting", MeetingSchema);
+
+export default Meeting;

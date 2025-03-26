@@ -46,8 +46,12 @@ function Dashboard() {
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    try {
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    } catch (error) {
+      console.error("Error parsing user data from localStorage:", error);
     }
   }, []);
 
@@ -63,8 +67,11 @@ function Dashboard() {
   };
 
   const getUserInitials = (name: string): string => {
-    const [firstName, lastName] = name.split(' ');
-    return `${firstName?.[0] || ''}${lastName?.[0] || ''}`.toUpperCase();
+    const nameParts = name.split(' ');
+    if (nameParts.length === 1) {
+      return nameParts[0][0].toUpperCase(); // Handle single-word names
+    }
+    return `${nameParts[0][0] || ''}${nameParts[1][0] || ''}`.toUpperCase();
   };
 
   return (
