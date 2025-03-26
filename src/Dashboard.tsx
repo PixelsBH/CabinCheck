@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { LayoutDashboard, Bell, LogOut, User } from 'lucide-react';
+import axios from "axios";
 
 interface User {
   uid: string;
@@ -19,6 +20,8 @@ function Dashboard() {
 
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [teachers, setTeachers] = useState<any[]>([]); // Ensure teachers is an array
+  const [loading, setLoading] = useState(true); // Add a loading state
 
   const notifications = [
     {
@@ -53,6 +56,27 @@ function Dashboard() {
     } catch (error) {
       console.error("Error parsing user data from localStorage:", error);
     }
+  }, []);
+
+  useEffect(() => {
+    const fetchTeachers = async () => {
+      try {
+        const response = await axios.get("/api/teachers");
+        if (Array.isArray(response.data)) {
+          setTeachers(response.data); // Ensure the response is an array
+        } else {
+          console.error("Unexpected API response:", response.data);
+          setTeachers([]); // Fallback to an empty array
+        }
+      } catch (error) {
+        console.error("Error fetching teachers:", error);
+        setTeachers([]); // Fallback to an empty array
+      } finally {
+        setLoading(false); // Stop loading
+      }
+    };
+
+    fetchTeachers();
   }, []);
 
   const handleProfileClick = () => {
@@ -196,6 +220,24 @@ function Dashboard() {
               ))}
             </div>
           </div>
+        </div>
+
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold mb-4">Teachers</h2>
+          {loading ? (
+            <p>Loading teachers...</p>
+          ) : (
+            <div className="space-y-4">
+              {teachers.map((teacher: any) => (
+                <div key={teacher._id} className="bg-neutral-800 rounded-xl p-4 shadow-md">
+                  <h3 className="font-medium">{teacher.name || "N/A"}</h3>
+                  <p className="text-neutral-400">Email: {teacher.email || "N/A"}</p>
+                  <p className="text-neutral-400">Status: {teacher.status || "N/A"}</p>
+                  <p className="text-neutral-400">Schedule: {teacher.schedule?.length || 0} events</p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </main>
     </div>

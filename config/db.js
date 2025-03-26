@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+mongoose.set('strictQuery', true); // Suppress the deprecation warning
+
 const uri = process.env.MONGO_URI; // Use the connection string from .env
 
 const connectDB = async () => {
