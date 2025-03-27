@@ -1,9 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth, provider } from '../config/firebase'; // Updated to use firebase.ts
-import { signInWithPopup } from 'firebase/auth';
+import { auth, provider } from '../config/firebase'; 
+import { signInWithPopup } from 'firebase/auth'; 
 
-function Login() {
+function Login({ setUser }) { // Added setUser as a prop
   const navigate = useNavigate();
 
   const handleGoogleLogin = async () => {
@@ -11,13 +11,17 @@ function Login() {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      // Save user data to localStorage
-      localStorage.setItem('user', JSON.stringify({
-        uid: user.uid,
-        displayName: user.displayName,
-        email: user.email,
-        photoURL: user.photoURL
-      }));
+      // Ensure setUser is a function before calling it
+      if (typeof setUser === 'function') {
+        setUser({
+          uid: user.uid,
+          displayName: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL
+        });
+      } else {
+        console.warn("setUser is not a function. User data will not be stored.");
+      }
 
       console.log("Google login successful. Redirecting...");
       navigate('/dashboard'); // Redirect to dashboard after successful login
