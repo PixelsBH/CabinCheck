@@ -56,8 +56,8 @@ function Login({ setUser }) {
           uid: user.uid,
           displayName: user.displayName,
           email: user.email,
-          username: username, // Ensure username is passed
-          photoURL: user.photoURL // Ensure photoURL is passed
+          username: username,
+          photoURL: user.photoURL,
         });
       } else {
         console.warn("setUser is not a function. User data will not be stored.");
@@ -69,6 +69,17 @@ function Login({ setUser }) {
     } catch (error) {
       console.error("Error during login:", error);
       alert("Login failed. Please try again.");
+    }
+  };
+
+  // Ensure logout clears user state
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      setUser(null); // Clear user state
+      navigate("/login"); // Redirect to login page
+    } catch (error) {
+      console.error("Error during logout:", error);
     }
   };
 

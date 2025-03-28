@@ -1,17 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom"; // Removed BrowserRouter as Router
-import { ChevronDown, LayoutDashboard, Activity } from 'lucide-react';
+import { Routes, Route, Navigate } from "react-router-dom"; // Removed BrowserRouter
+import { ChevronDown, LayoutDashboard, Activity } from "lucide-react";
 import Profile from "./components/Profile";
 import WelcomeCard from "./components/WelcomeCard";
 import Notifications from "./components/Notification";
 import ProfilePage from "./components/ProfilePage";
 import StatusInfo from "./components/StatusInfo";
-import Login from "./Login"; // Import Login Component
-import PropTypes from 'prop-types';
-import { getAuth, onAuthStateChanged } from "firebase/auth"; // Import Firebase auth
+import Login from "./Login";
+import PropTypes from "prop-types";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth"; // Import signOut
 
 const Layout = ({ user, notifications, showDashboard = true, children }) => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      await signOut(getAuth()); // Sign out the user
+      window.location.reload(); // Reload the page to reset the state
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-black flex">
@@ -35,25 +44,28 @@ const Layout = ({ user, notifications, showDashboard = true, children }) => {
         <header className="bg-gray-900 px-6 py-4">
           <div className="flex justify-end">
             <div className="relative">
-              <button 
+              <button
                 onClick={() => setShowProfileMenu(!showProfileMenu)}
                 className="flex items-center space-x-3 text-white hover:text-gray-300"
               >
                 <img
-                  src={user?.photoURL || "/default-profile.png"} // Ensure photoURL is used or fallback to default
-                  alt={user?.displayName || "User"} // Use displayName for alt text
+                  src={user?.photoURL || "/default-profile.png"}
+                  alt={user?.displayName || "User"}
                   className="w-10 h-10 rounded-full"
                 />
-                <span>{user?.displayName || "Guest"}</span> {/* Revert to displayName */}
+                <span>{user?.displayName || "Guest"}</span>
                 <ChevronDown size={20} />
               </button>
-    
+
               {showProfileMenu && (
                 <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg py-1 z-10">
                   <a href="/profile" className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">
                     View Profile
                   </a>
-                  <button className="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-700">
+                  <button
+                    onClick={handleLogout} // Attach logout handler
+                    className="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-700"
+                  >
                     Logout
                   </button>
                 </div>
@@ -67,7 +79,7 @@ const Layout = ({ user, notifications, showDashboard = true, children }) => {
           {children || (
             showDashboard ? (
               <>
-                <WelcomeCard firstName={user?.displayName?.split(" ")[0]} /> {/* Pass first name */}
+                <WelcomeCard firstName={user?.displayName?.split(" ")[0]} />
                 <div className="mt-8">
                   <Notifications notifications={notifications} />
                 </div>
@@ -86,7 +98,7 @@ Layout.propTypes = {
   user: PropTypes.shape({
     displayName: PropTypes.string,
     photoURL: PropTypes.string,
-    username: PropTypes.string, // Added username prop
+    username: PropTypes.string,
   }),
   notifications: PropTypes.arrayOf(
     PropTypes.shape({
@@ -102,7 +114,8 @@ Layout.propTypes = {
 };
 
 function App() {
-  const [user, setUser] = useState(null); // Initially user is null
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const notifications = [
     {
@@ -135,29 +148,29 @@ function App() {
         setUser({
           displayName: firebaseUser.displayName,
           photoURL: firebaseUser.photoURL,
-          username: firebaseUser.email.split("@")[0], // Extract username from email
+          username: firebaseUser.email.split("@")[0],
         });
       } else {
-        setUser(null);
+        setUser(null); // Clear user state on logout
       }
+      setLoading(false); // Ensure loading state is updated
     });
 
-    return () => unsubscribe(); // Cleanup subscription on unmount
+    return () => unsubscribe();
   }, []);
 
+  if (loading) {
+    return <div className="text-white text-center">Loading...</div>;
+  }
+
   return (
-    <Routes>
-      {/* Redirect to Login if no user is logged in */}
+    <Routes> {/* Removed <Router> */}
       <Route
         path="/"
         element={
           user ? (
-            <Layout
-              user={user}
-              notifications={notifications}
-              showDashboard={true}
-            >
-              <WelcomeCard firstName={user.displayName?.split(" ")[0]} /> {/* Pass first name */}
+            <Layout user={user} notifications={notifications} showDashboard={true}>
+              <WelcomeCard firstName={user.displayName?.split(" ")[0]} />
             </Layout>
           ) : (
             <Navigate to="/login" />
@@ -186,7 +199,6 @@ function App() {
           )
         }
       />
-      {/* Login Route - Pass setUser as prop */}
       <Route path="/login" element={<Login setUser={setUser} />} />
     </Routes>
   );
