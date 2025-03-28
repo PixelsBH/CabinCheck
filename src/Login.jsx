@@ -7,7 +7,7 @@ function Login({ setUser }) {
   const navigate = useNavigate();
 
   const isValidCabinCheckEmail = (email) => {
-    const regex = /^([\w\d]+)(\d{2})(bcs|bec|bcy|bcd)(\d{2,3})@iiitkottayam\.ac\.in$/;
+    const regex = /^([\w\d]+)(\d{2})(bcs|bec|bcy|bcd)(\d{1,3})@iiitkottayam\.ac\.in$/; // Fixed {1,3}
     const match = email.match(regex);
 
     if (!match) return false;
@@ -56,15 +56,15 @@ function Login({ setUser }) {
           uid: user.uid,
           displayName: user.displayName,
           email: user.email,
-          username: username, // Store the extracted username
-          photoURL: user.photoURL
+          username: username, // Ensure username is passed
+          photoURL: user.photoURL // Ensure photoURL is passed
         });
       } else {
         console.warn("setUser is not a function. User data will not be stored.");
       }
 
       console.log("Google login successful. Redirecting...");
-      navigate("/dashboard"); // Redirect to dashboard after successful login
+      navigate("/"); // Redirect to dashboard after successful login
 
     } catch (error) {
       console.error("Error during login:", error);

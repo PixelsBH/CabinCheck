@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom"; // Removed BrowserRouter as Router
 import { ChevronDown, LayoutDashboard, Activity } from 'lucide-react';
 import Profile from "./components/Profile";
@@ -8,6 +8,7 @@ import ProfilePage from "./components/ProfilePage";
 import StatusInfo from "./components/StatusInfo";
 import Login from "./Login"; // Import Login Component
 import PropTypes from 'prop-types';
+import { getAuth, onAuthStateChanged } from "firebase/auth"; // Import Firebase auth
 
 const Layout = ({ user, notifications, showDashboard = true, children }) => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -39,11 +40,11 @@ const Layout = ({ user, notifications, showDashboard = true, children }) => {
                 className="flex items-center space-x-3 text-white hover:text-gray-300"
               >
                 <img
-                  src={user?.profilePic} // Check if user exists before accessing profilePic
-                  alt={user?.name || "User"} // Default alt text
+                  src={user?.photoURL || "/default-profile.png"} // Ensure photoURL is used or fallback to default
+                  alt={user?.displayName || "User"} // Use displayName for alt text
                   className="w-10 h-10 rounded-full"
                 />
-                <span>{user?.name || "Guest"}</span>
+                <span>{user?.displayName || "Guest"}</span> {/* Revert to displayName */}
                 <ChevronDown size={20} />
               </button>
     
@@ -66,7 +67,7 @@ const Layout = ({ user, notifications, showDashboard = true, children }) => {
           {children || (
             showDashboard ? (
               <>
-                <WelcomeCard />
+                <WelcomeCard firstName={user?.displayName?.split(" ")[0]} /> {/* Pass first name */}
                 <div className="mt-8">
                   <Notifications notifications={notifications} />
                 </div>
@@ -83,9 +84,9 @@ const Layout = ({ user, notifications, showDashboard = true, children }) => {
 
 Layout.propTypes = {
   user: PropTypes.shape({
-    name: PropTypes.string,
-    year: PropTypes.string,
-    profilePic: PropTypes.string,
+    displayName: PropTypes.string,
+    photoURL: PropTypes.string,
+    username: PropTypes.string, // Added username prop
   }),
   notifications: PropTypes.arrayOf(
     PropTypes.shape({
@@ -127,25 +128,68 @@ function App() {
     },
   ];
 
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        setUser({
+          displayName: firebaseUser.displayName,
+          photoURL: firebaseUser.photoURL,
+          username: firebaseUser.email.split("@")[0], // Extract username from email
+        });
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup subscription on unmount
+  }, []);
+
   return (
     <Routes>
       {/* Redirect to Login if no user is logged in */}
-      <Route path="/" element={user ? <Layout user={user} notifications={notifications} showDashboard={true} /> : <Navigate to="/login" />} />
-      <Route path="/profile" element={user ? <Layout user={user} notifications={notifications} showDashboard={false} /> : <Navigate to="/login" />} />
-      <Route 
-        path="/status" 
+      <Route
+        path="/"
+        element={
+          user ? (
+            <Layout
+              user={user}
+              notifications={notifications}
+              showDashboard={true}
+            >
+              <WelcomeCard firstName={user.displayName?.split(" ")[0]} /> {/* Pass first name */}
+            </Layout>
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          user ? (
+            <Layout user={user} notifications={notifications} showDashboard={false} />
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
+      />
+      <Route
+        path="/status"
         element={
           user ? (
             <Layout user={user} notifications={notifications} showDashboard={false}>
               <StatusInfo user={user} />
             </Layout>
-          ) : <Navigate to="/login" />
-        } 
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
       />
       {/* Login Route - Pass setUser as prop */}
       <Route path="/login" element={<Login setUser={setUser} />} />
     </Routes>
-  );  
+  );
 }
 
 export default App;
