@@ -99,6 +99,7 @@ Layout.propTypes = {
     displayName: PropTypes.string,
     photoURL: PropTypes.string,
     username: PropTypes.string,
+    email: PropTypes.string, // Added email prop type
   }),
   notifications: PropTypes.arrayOf(
     PropTypes.shape({
@@ -148,7 +149,8 @@ function App() {
         setUser({
           displayName: firebaseUser.displayName,
           photoURL: firebaseUser.photoURL,
-          username: firebaseUser.email.split("@")[0],
+          email: firebaseUser.email, // Ensure email is included
+          username: firebaseUser.email.split("@")[0], // Extract username
         });
       } else {
         setUser(null); // Clear user state on logout
