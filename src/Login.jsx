@@ -1,22 +1,62 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { auth, provider } from '../config/firebase'; 
-import { signInWithPopup } from 'firebase/auth'; 
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { auth, provider } from "../config/firebase"; 
+import { signInWithPopup, signOut } from "firebase/auth"; 
 
-function Login({ setUser }) { // Added setUser as a prop
+function Login({ setUser }) {
   const navigate = useNavigate();
+
+  const isValidCabinCheckEmail = (email) => {
+    const regex = /^([\w\d]+)(\d{2})(bcs|bec|bcy|bcd)(\d{2,3})@iiitkottayam\.ac\.in$/;
+    const match = email.match(regex);
+
+    if (!match) return false;
+
+    let username = match[1]; // Extracted username
+    let year = parseInt(match[2]); // Admission Year (21, 22, 23, 24)
+    let program = match[3]; // Program Code (bcs, bec, bcy, bcd)
+    let number = parseInt(match[4]); // Unique student number
+
+    if (!username) return false; // Ensure username exists
+
+    // Ensure year is between 21 and 24 (valid B.Tech batches)
+    if (![21, 22, 23, 24].includes(year)) return false;
+
+    // Check number ranges based on the program
+    if (program === "bcs" && (number < 0 || number > 240)) return false;
+    if (["bec", "bcy", "bcd"].includes(program) && (number < 0 || number > 60)) return false;
+
+    return username; // Return the extracted username
+  };
 
   const handleGoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
+      const email = user.email;
 
-      // Ensure setUser is a function before calling it
-      if (typeof setUser === 'function') {
+      // Validate email format
+      if (!email.endsWith("@iiitkottayam.ac.in")) {
+        alert("Please use your IIIT Kottayam email.");
+        await signOut(auth);
+        return;
+      }
+
+      // Validate email according to Cabin Check rules
+      const username = isValidCabinCheckEmail(email);
+      if (!username) {
+        alert("Invalid email format. Only valid B.Tech students can log in.");
+        await signOut(auth);
+        return;
+      }
+
+      // Store user info
+      if (typeof setUser === "function") {
         setUser({
           uid: user.uid,
           displayName: user.displayName,
           email: user.email,
+          username: username, // Store the extracted username
           photoURL: user.photoURL
         });
       } else {
@@ -24,7 +64,8 @@ function Login({ setUser }) { // Added setUser as a prop
       }
 
       console.log("Google login successful. Redirecting...");
-      navigate('/dashboard'); // Redirect to dashboard after successful login
+      navigate("/dashboard"); // Redirect to dashboard after successful login
+
     } catch (error) {
       console.error("Error during login:", error);
       alert("Login failed. Please try again.");
