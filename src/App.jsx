@@ -118,7 +118,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const notifications = [
+  const [notifications, setNotifications ]= useState([
     {
       id: 1,
       title: "Assignment Due",
@@ -140,7 +140,7 @@ function App() {
       time: "1 day ago",
       type: "info",
     },
-  ];
+  ]);
 
   useEffect(() => {
     const auth = getAuth();
@@ -173,6 +173,9 @@ function App() {
           user ? (
             <Layout user={user} notifications={notifications} showDashboard={true}>
               <WelcomeCard firstName={user.displayName?.split(" ")[0]} />
+              <div className="mt-8">
+                <Notifications notifications={notifications} />
+              </div>
             </Layout>
           ) : (
             <Navigate to="/login" />
