@@ -25,7 +25,7 @@ function Notifications({ notifications }) {
             <div>
               <h4 className="font-semibold">{notification.title}</h4>
               <p className="text-gray-400">{notification.message}</p>
-              <span className="text-sm text-gray-500">{notification.time}</span>
+              <span className="text-sm text-gray-500">{new Date(notification.date).toLocaleDateString()}</span>
             </div>
           </div>
         ))
@@ -42,7 +42,7 @@ Notifications.propTypes = {
       id: PropTypes.number.isRequired,
       title: PropTypes.string.isRequired,
       message: PropTypes.string.isRequired,
-      time: PropTypes.string.isRequired,
+      date: PropTypes.string.isRequired,
       type: PropTypes.string.isRequired,
     })
   ).isRequired,

@@ -13,9 +13,9 @@ export const getAllTeachers = async (req, res) => {
 // Create a new teacher
 export const createTeacher = async (req, res) => {
   try {
-    const { name, email, firebaseUID, status } = req.body;
+    const { name, email, status, office, image, firebaseUID, subjects } = req.body; // Added firebaseUID and subjects
 
-    const newTeacher = new Teacher({ name, email, firebaseUID, status });
+    const newTeacher = new Teacher({ name, email, status, office, image, firebaseUID, subjects });
     await newTeacher.save();
 
     res.status(201).json(newTeacher);
@@ -40,7 +40,12 @@ export const getTeacherById = async (req, res) => {
 // Update a teacher
 export const updateTeacher = async (req, res) => {
   try {
-    const updatedTeacher = await Teacher.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const { name, email, status, office, image, firebaseUID, subjects } = req.body; // Added firebaseUID and subjects
+    const updatedTeacher = await Teacher.findByIdAndUpdate(
+      req.params.id,
+      { name, email, status, office, image, firebaseUID, subjects },
+      { new: true }
+    );
     if (!updatedTeacher) {
       return res.status(404).json({ message: "Teacher not found" });
     }

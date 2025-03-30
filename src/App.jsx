@@ -117,30 +117,21 @@ Layout.propTypes = {
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [notifications, setNotifications] = useState([]);
 
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      title: "Assignment Due",
-      message: "Your Advanced Mathematics assignment is due tomorrow",
-      time: "2 hours ago",
-      type: "urgent",
-    },
-    {
-      id: 2,
-      title: "Grade Posted",
-      message: "New grade posted for Computer Science",
-      time: "5 hours ago",
-      type: "info",
-    },
-    {
-      id: 3,
-      title: "Event Reminder",
-      message: "Student Council meeting tomorrow at 3 PM",
-      time: "1 day ago",
-      type: "info",
-    },
-  ]);
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/routes/notifications");
+        const data = await response.json();
+        setNotifications(data);
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+      }
+    };
+
+    fetchNotifications();
+  }, []);
 
   useEffect(() => {
     const auth = getAuth();
