@@ -64,17 +64,11 @@ function StatusInfo() {
       {/* Header */}
       <header className="flex justify-between items-center mb-8">
         <div className="flex items-center space-x-3 text-white">
-          {firebaseUser?.photoURL ? (
-            <img
-              src={firebaseUser.photoURL}
-              alt={firebaseUser.displayName}
-              className="w-10 h-10 rounded-full"
-            />
-          ) : (
-            <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-white">
-              {firebaseUser?.displayName?.[0]?.toUpperCase() || 'G'}
-            </div>
-          )}
+          <img
+            src={firebaseUser?.photoURL || "/default-profile.png"} // Use fallback image
+            alt={firebaseUser?.displayName || "User"}
+            className="w-10 h-10 rounded-full"
+          />
           <div className="flex flex-col">
             <span className="font-semibold">{firebaseUser?.displayName || 'Guest'}</span>
             <span className="text-sm text-gray-400">{firebaseUser?.email || 'No email available'}</span>

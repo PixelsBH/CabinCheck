@@ -1,16 +1,19 @@
 import express from "express";
-import Student from "../models/Student.js";
+import {
+  getAllStudents,
+  createStudent,
+  getStudentById,
+  updateStudent,
+  deleteStudent,
+} from "../controllers/studentController.js";
 
 const router = express.Router();
 
-// Fetch all students
-router.get("/", async (req, res) => {
-  try {
-    const students = await Student.find();
-    res.status(200).json(students);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching students", error: error.message });
-  }
-});
+// Routes
+router.get("/", getAllStudents); // Fetch all students
+router.post("/", createStudent); // Create a new student
+router.get("/:id", getStudentById); // Fetch a student by ID
+router.put("/:id", updateStudent); // Update a student
+router.delete("/:id", deleteStudent); // Delete a student
 
 export default router;

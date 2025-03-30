@@ -1,13 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { auth, provider } from "../config/firebase"; 
-import { signInWithPopup, signOut } from "firebase/auth"; 
+import { auth, provider } from "../config/firebase";
+import { signInWithPopup, signOut } from "firebase/auth";
+import { extractRollNo } from "../utils/rollNoUtils"; // Import extractRollNo
 
 function Login({ setUser }) {
   const navigate = useNavigate();
 
   const isValidCabinCheckEmail = (email) => {
-    const regex = /^([\w\d]+)(\d{2})(bcs|bec|bcy|bcd)(\d{1,3})@iiitkottayam\.ac\.in$/; // Fixed {1,3}
+    const regex = /^([\w\d]+)(\d{2})(bcs|bec|bcy|bcd)(\d{1,3})@iiitkottayam\.ac\.in$/;
     const match = email.match(regex);
 
     if (!match) return false;
@@ -50,18 +51,43 @@ function Login({ setUser }) {
         return;
       }
 
+      // Compute roll number using extractRollNo
+      const rollNo = extractRollNo(email);
+      if (rollNo === "Invalid Email") {
+        alert("Invalid email format. Unable to compute roll number.");
+        await signOut(auth);
+        return;
+      }
+
       // Store user info
+      const userData = {
+        uid: user.uid,
+        displayName: user.displayName,
+        email: user.email,
+        username: username,
+        rollNo: rollNo,
+        photoURL: user.photoURL,
+      };
+
       if (typeof setUser === "function") {
-        setUser({
-          uid: user.uid,
-          displayName: user.displayName,
-          email: user.email,
-          username: username,
-          photoURL: user.photoURL,
-        });
+        setUser(userData);
       } else {
         console.warn("setUser is not a function. User data will not be stored.");
       }
+
+      // Send user data to the backend to store in MongoDB
+      await fetch("http://localhost:5000/routes/students", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: user.displayName,
+          email: user.email,
+          firebaseUID: user.uid,
+          rollNo: rollNo,
+        }),
+      });
 
       console.log("Google login successful. Redirecting...");
       navigate("/"); // Redirect to dashboard after successful login
@@ -72,7 +98,6 @@ function Login({ setUser }) {
     }
   };
 
-  // Ensure logout clears user state
   const handleLogout = async () => {
     try {
       await signOut(auth);

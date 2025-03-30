@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom"; // Removed BrowserRouter
+import { Routes, Route, Navigate } from "react-router-dom";
 import { ChevronDown, LayoutDashboard, Activity } from "lucide-react";
 import Profile from "./components/Profile";
 import WelcomeCard from "./components/WelcomeCard";
@@ -8,15 +8,15 @@ import ProfilePage from "./components/ProfilePage";
 import StatusInfo from "./components/StatusInfo";
 import Login from "./Login";
 import PropTypes from "prop-types";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth"; // Import signOut
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
 const Layout = ({ user, notifications, showDashboard = true, children }) => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   const handleLogout = async () => {
     try {
-      await signOut(getAuth()); // Sign out the user
-      window.location.reload(); // Reload the page to reset the state
+      await signOut(getAuth());
+      window.location.reload();
     } catch (error) {
       console.error("Error during logout:", error);
     }
@@ -63,7 +63,7 @@ const Layout = ({ user, notifications, showDashboard = true, children }) => {
                     View Profile
                   </a>
                   <button
-                    onClick={handleLogout} // Attach logout handler
+                    onClick={handleLogout}
                     className="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-700"
                   >
                     Logout
@@ -99,7 +99,7 @@ Layout.propTypes = {
     displayName: PropTypes.string,
     photoURL: PropTypes.string,
     username: PropTypes.string,
-    email: PropTypes.string, // Added email prop type
+    email: PropTypes.string,
   }),
   notifications: PropTypes.arrayOf(
     PropTypes.shape({
@@ -118,7 +118,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const [notifications, setNotifications ]= useState([
+  const [notifications, setNotifications] = useState([
     {
       id: 1,
       title: "Assignment Due",
@@ -146,16 +146,20 @@ function App() {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       if (firebaseUser) {
+        const defaultPhotoURL = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+          firebaseUser.displayName || "User"
+        )}&background=random`;
+
         setUser({
           displayName: firebaseUser.displayName,
-          photoURL: firebaseUser.photoURL,
-          email: firebaseUser.email, // Ensure email is included
-          username: firebaseUser.email.split("@")[0], // Extract username
+          photoURL: firebaseUser.photoURL || defaultPhotoURL,
+          email: firebaseUser.email,
+          username: firebaseUser.email.split("@")[0],
         });
       } else {
-        setUser(null); // Clear user state on logout
+        setUser(null);
       }
-      setLoading(false); // Ensure loading state is updated
+      setLoading(false);
     });
 
     return () => unsubscribe();
@@ -166,7 +170,7 @@ function App() {
   }
 
   return (
-    <Routes> {/* Removed <Router> */}
+    <Routes>
       <Route
         path="/"
         element={

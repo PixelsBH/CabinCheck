@@ -1,16 +1,17 @@
 import express from "express";
-import Notification from "../models/Notifications.js";
+import {
+  getAllNotifications,
+  createNotification,
+  getNotificationById,
+  deleteNotification,
+} from "../controllers/notificationController.js";
 
 const router = express.Router();
 
-// Fetch all notifications
-router.get("/", async (req, res) => {
-  try {
-    const notifications = await Notification.find().populate("recipient");
-    res.status(200).json(notifications);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching notifications", error: error.message });
-  }
-});
+// Routes
+router.get("/", getAllNotifications); // Fetch all notifications
+router.post("/", createNotification); // Create a new notification
+router.get("/:id", getNotificationById); // Fetch a notification by ID
+router.delete("/:id", deleteNotification); // Delete a notification
 
 export default router;

@@ -1,16 +1,19 @@
 import express from "express";
-import Meeting from "../models/Meeting.js";
+import {
+  getAllMeetings,
+  createMeeting,
+  getMeetingById,
+  updateMeeting,
+  deleteMeeting,
+} from "../controllers/meetingController.js";
 
 const router = express.Router();
 
-// Fetch all meetings
-router.get("/", async (req, res) => {
-  try {
-    const meetings = await Meeting.find().populate("teacher").populate("student");
-    res.status(200).json(meetings);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching meetings", error: error.message });
-  }
-});
+// Routes
+router.get("/", getAllMeetings); // Fetch all meetings
+router.post("/", createMeeting); // Create a new meeting
+router.get("/:id", getMeetingById); // Fetch a meeting by ID
+router.put("/:id", updateMeeting); // Update a meeting
+router.delete("/:id", deleteMeeting); // Delete a meeting
 
 export default router;
