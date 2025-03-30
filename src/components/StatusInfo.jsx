@@ -44,6 +44,8 @@ function StatusInfo({user}) {
       } catch (error) {
         console.error("Error fetching teachers:", error);
       }
+      const interval = setInterval(fetchTeachers, 50);
+      return () => clearInterval(interval); // Cleanup on unmount
     };
 
     fetchTeachers();
