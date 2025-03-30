@@ -36,19 +36,29 @@ function StatusInfo({user}) {
   }, [navigate]);
 
   useEffect(() => {
+    let isMounted = true; // Track if the component is still mounted
+
     const fetchTeachers = async () => {
       try {
         const response = await fetch("http://localhost:5000/api/teachers");
         const data = await response.json();
-        setTeachers(data);
+        if (isMounted) {
+          setTeachers(data); // Update state only if the component is still mounted
+        }
       } catch (error) {
         console.error("Error fetching teachers:", error);
+      } finally {
+        if (isMounted) {
+          setTimeout(fetchTeachers, 2000); // Schedule the next fetch
+        }
       }
-      const interval = setInterval(fetchTeachers, 50);
-      return () => clearInterval(interval); // Cleanup on unmount
     };
 
-    fetchTeachers();
+    fetchTeachers(); // Initial fetch
+
+    return () => {
+      isMounted = false; // Prevent state updates after unmount
+    };
   }, []);
 
   const filteredTeachers = teachers.filter(teacher =>

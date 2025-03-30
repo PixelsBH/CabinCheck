@@ -1,18 +1,21 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { AlertCircle, Info } from 'lucide-react';
 
 function Notifications({ notifications }) {
   useEffect(() => {
-  console.log("Notifications received:", notifications); // Debugging log
+    if (notifications.length > 0) {
+      console.debug("Notifications received:", notifications); // Use console.debug for less intrusive logging
+    }
   }, [notifications]);
+
   return (
     <div className="space-y-4">
       <h3 className="text-xl font-semibold mb-4">Recent Notifications</h3>
       {notifications.length > 0 ? (
-        notifications.map((notification) => (
+        notifications.map((notification, index) => (
           <div
-            key={notification.id}
+            key={notification.id || index} // Use index as fallback if id is undefined
             className="bg-gray-800 rounded-lg p-4 flex items-start space-x-4"
           >
             {notification.type === 'urgent' ? (
@@ -23,9 +26,13 @@ function Notifications({ notifications }) {
               <Info className="text-gray-500" /> // Default icon for unknown types
             )}
             <div>
-              <h4 className="font-semibold">{notification.title}</h4>
-              <p className="text-gray-400">{notification.message}</p>
-              <span className="text-sm text-gray-500">{new Date(notification.date).toLocaleDateString()}</span>
+              <h4 className="font-semibold">{notification.title || 'Untitled'}</h4>
+              <p className="text-gray-400">{notification.message || 'No message provided.'}</p>
+              <span className="text-sm text-gray-500">
+                {notification.date
+                  ? new Date(notification.date).toLocaleDateString()
+                  : 'Unknown date'}
+              </span>
             </div>
           </div>
         ))
@@ -39,11 +46,9 @@ function Notifications({ notifications }) {
 Notifications.propTypes = {
   notifications: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      title: PropTypes.string.isRequired,
-      message: PropTypes.string.isRequired,
-      date: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired, // Matches the Notification model
+      message: PropTypes.string.isRequired, // Matches the Notification model
+      date: PropTypes.string, // Matches the Notification model
     })
   ).isRequired,
 };

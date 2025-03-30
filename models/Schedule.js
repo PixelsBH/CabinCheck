@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const ScheduleSchema = new mongoose.Schema({
-  teacher: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  teacher: { type: mongoose.Schema.Types.ObjectId, ref: "Teacher", required: true },
   subjectName: { type: String, required: true },
   roomNo: { type: String, required: true },
   batchName: { type: String, required: true },

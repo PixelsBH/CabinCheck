@@ -103,11 +103,9 @@ Layout.propTypes = {
   }),
   notifications: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      title: PropTypes.string.isRequired,
-      message: PropTypes.string.isRequired,
-      time: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired, // Matches the Notification model
+      message: PropTypes.string.isRequired, // Matches the Notification model
+      date: PropTypes.string, // Matches the Notification model
     })
   ),
   showDashboard: PropTypes.bool,
@@ -120,18 +118,29 @@ function App() {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
+    let isMounted = true; // Track if the component is still mounted
+
     const fetchNotifications = async () => {
       try {
         const response = await fetch("http://localhost:5000/routes/notifications");
         const data = await response.json();
-        setNotifications(data);
+        if (isMounted) {
+          setNotifications(data); // Update state only if the component is still mounted
+        }
       } catch (error) {
         console.error("Error fetching notifications:", error);
+      } finally {
+        if (isMounted) {
+          setTimeout(fetchNotifications, 2000); // Schedule the next fetch
+        }
       }
     };
 
-    const interval = setInterval(fetchNotifications, 50);
-    return () => clearInterval(interval); // Cleanup on unmount
+    fetchNotifications(); // Initial fetch
+
+    return () => {
+      isMounted = false; // Prevent state updates after unmount
+    };
   }, []);
 
   useEffect(() => {
