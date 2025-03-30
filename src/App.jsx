@@ -130,7 +130,8 @@ function App() {
       }
     };
 
-    fetchNotifications();
+    const interval = setInterval(fetchNotifications, 50);
+    return () => clearInterval(interval); // Cleanup on unmount
   }, []);
 
   useEffect(() => {
