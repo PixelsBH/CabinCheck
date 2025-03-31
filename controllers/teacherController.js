@@ -13,14 +13,27 @@ export const getAllTeachers = async (req, res) => {
 // Create a new teacher
 export const createTeacher = async (req, res) => {
   try {
-    const { name, email, status, office, image, firebaseUID, subjects } = req.body; // Added firebaseUID and subjects
+    const { name, email, image, firebaseUID } = req.body;
 
-    const newTeacher = new Teacher({ name, email, status, office, image, firebaseUID, subjects });
+    // Check if the teacher already exists
+    let teacher = await Teacher.findOne({ firebaseUID });
+    if (teacher) {
+      return res.status(200).json(teacher); // Return existing teacher
+    }
+
+    // Create a new teacher if not found
+    const newTeacher = new Teacher({
+      name,
+      email,
+      image,
+      firebaseUID,
+      status: false, // Default status to false
+    });
     await newTeacher.save();
 
     res.status(201).json(newTeacher);
   } catch (error) {
-    res.status(500).json({ message: "Error creating teacher", error: error.message });
+    res.status(500).json({ message: "Error creating or logging in teacher", error: error.message });
   }
 };
 

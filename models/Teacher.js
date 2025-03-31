@@ -5,7 +5,7 @@ const TeacherSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   status: { type: Boolean, required: true }, 
   subjects: [{ type: String }], 
-  office: { type: String, required: true }, 
+  office: { type: String, required: false }, 
   image: { type: String }, 
   schedule: [{ type: mongoose.Schema.Types.ObjectId, ref: "Schedule" }],
   firebaseUID: { type: String }, 
