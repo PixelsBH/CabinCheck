@@ -14,10 +14,14 @@ function Sidebar() {
           <User size={24} />
           <span>Profile</span>
         </Link>
-        <div className="flex items-center space-x-3 text-white hover:text-gray-300 cursor-pointer">
+        <Link to="/status" className="flex items-center space-x-3 text-white hover:text-gray-300">
+          <User size={24} />
+          <span>Status Info</span>
+        </Link> 
+        <Link to="/requests" className="flex items-center space-x-3 text-white hover:text-gray-300">
           <Bell size={24} />
-          <span>Notifications</span>
-        </div>
+          <span>Requests</span>
+        </Link>
         <div className="flex items-center space-x-3 text-white hover:text-gray-300 cursor-pointer">
           <Settings size={24} />
           <span>Settings</span>

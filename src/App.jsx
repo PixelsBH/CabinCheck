@@ -6,6 +6,7 @@ import WelcomeCard from "./components/WelcomeCard";
 import Notifications from "./components/Notification";
 import ProfilePage from "./components/ProfilePage";
 import StatusInfo from "./components/StatusInfo";
+import Requests from "./components/RequestPage";
 import Login from "./Login";
 import PropTypes from "prop-types";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
@@ -203,6 +204,18 @@ function App() {
           user ? (
             <Layout user={user} notifications={notifications} showDashboard={false}>
               <StatusInfo user={user} />
+            </Layout>
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
+      />
+      <Route
+        path="/requests"
+        element={
+          user ? (
+            <Layout user={user} showDashboard={false}>
+              <Requests user={user} />
             </Layout>
           ) : (
             <Navigate to="/login" />

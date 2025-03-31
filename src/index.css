@@ -27,3 +27,8 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #525252;
 }
+
+/* Ensure the sidebar has enough space for all items */
+.w-64 {
+  overflow-y: auto; /* Add scrolling if content overflows */
+}

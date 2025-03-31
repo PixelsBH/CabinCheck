@@ -11,19 +11,34 @@ function StatusInfo({user}) {
   const [teachers, setTeachers] = useState([]); // State for teachers data
   const navigate = useNavigate();
 
-  // const handleClick = async (username, professor) => {
-  //   try {
-  //     const response = await axios.post('/api/meetings', {
-  //       student: username,
-  //       professor: professor
-  //     });
-  //     console.log('Meeting request sent:', response.data);
-  //     alert('Meeting request sent successfully!');
-  //   } catch (error) {
-  //     console.error('Error sending meeting request:', error);
-  //     alert('Failed to send meeting request.');
-  //   }
-  // };
+  const handleClick = async (username, professor) => {
+    console.log("inside handleClick", username, professor); // Log the parameters
+    try {
+      const response = await fetch('http://localhost:5000/routes/meetings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          teacher: professor, // Teacher's name
+          student: username, // Student's name
+          date: new Date().toISOString(), // Current date
+          status: 'Pending'
+        })
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to send meeting request');
+      }
+  
+      const data = await response.json();
+      console.log('Meeting request sent:', data);
+      alert('Meeting request sent successfully!');
+    } catch (error) {
+      console.error('Error sending meeting request:', error);
+      alert('Failed to send meeting request.');
+    }
+  };
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
       if (!currentUser) {
@@ -109,7 +124,7 @@ function StatusInfo({user}) {
                 <p className="text-gray-400">{teacher.subjects.join(", ")}</p>
               </div>
             </div>
-            {/* <div className="flex justify-between items-center pt-4 border-t border-gray-700">
+            <div className="flex justify-between items-center pt-4 border-t border-gray-700">
       <span className="text-gray-300">{teacher.office}</span>
       <button
         className="px-3 py-1 bg-blue-600 text-white rounded-full text-sm mx-2"
@@ -124,18 +139,8 @@ function StatusInfo({user}) {
       }`}>
         {teacher.status ? 'Available' : 'Unavailable'}
       </span>
-    </div> */}
+    </div>
 
-            <div className="flex justify-between items-center pt-4 border-t border-gray-700">
-              <span className="text-gray-300">{teacher.office}</span>
-              <span className={`px-3 py-1 rounded-full text-sm ${
-                teacher.status 
-                  ? 'bg-green-900 text-green-300' 
-                  : 'bg-red-900 text-red-300'
-              }`}>
-                {teacher.status ? 'Available' : 'Unavailable'}
-              </span>
-            </div>
           </div>
         ))}
       </div>

@@ -10,7 +10,7 @@ import {
 const router = express.Router();
 
 // Routes
-router.get("/", getAllMeetings); // Fetch all meetings
+router.get("/:name", getAllMeetings); // Fetch all meetings
 router.post("/", createMeeting); // Create a new meeting
 router.get("/:id", getMeetingById); // Fetch a meeting by ID
 router.put("/:id", updateMeeting); // Update a meeting
