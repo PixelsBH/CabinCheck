@@ -9,12 +9,12 @@ function Requests({ user }) {
       try {
         const response = await fetch(`http://localhost:5000/routes/meetings/${user.username}`);
         if (!response.ok) {
-          throw new Error("Failed to fetch Requestss");
+          throw new Error("Failed to fetch Requests");
         }
         const data = await response.json();
         setRequestss(data);
       } catch (error) {
-        console.error("Error fetching Requestss:", error);
+        console.error("Error fetching Requests:", error);
       } finally {
         setLoading(false);
       }
@@ -31,14 +31,14 @@ function Requests({ user }) {
   }, [user.username]);
 
   if (loading) {
-    return <div className="text-white">Loading Requestss...</div>;
+    return <div className="text-white">Loading Requests...</div>;
   }
 
   return (
     <div className="min-h-screen bg-black p-8">
-      <h1 className="text-2xl font-bold text-white mb-6">Requestss</h1>
+      <h1 className="text-2xl font-bold text-white mb-6">Requests</h1>
       {Requestss.length === 0 ? (
-        <p className="text-gray-400">No Requestss available.</p>
+        <p className="text-gray-400">No Requests available.</p>
       ) : (
         <ul className="space-y-4">
           {Requestss.map((Requests) => (

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { ChevronDown, LayoutDashboard, Activity } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import Profile from "./components/Profile";
 import WelcomeCard from "./components/WelcomeCard";
 import Notifications from "./components/Notification";
@@ -8,6 +8,7 @@ import ProfilePage from "./components/ProfilePage";
 import StatusInfo from "./components/StatusInfo";
 import Requests from "./components/RequestPage";
 import Login from "./Login";
+import Sidebar from "./components/Sidebar"; // Import Sidebar component
 import PropTypes from "prop-types";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
@@ -26,19 +27,7 @@ const Layout = ({ user, notifications, showDashboard = true, children }) => {
   return (
     <div className="min-h-screen bg-black flex">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-900 p-6 flex flex-col">
-        <h1 className="text-white text-2xl font-bold mb-8">Cabin Check</h1>
-        <nav className="space-y-4">
-          <a href="/" className="flex items-center space-x-3 text-white hover:text-gray-300 p-2 rounded-lg hover:bg-gray-800">
-            <LayoutDashboard size={24} />
-            <span>Dashboard</span>
-          </a>
-          <a href="/status" className="flex items-center space-x-3 text-white hover:text-gray-300 p-2 rounded-lg hover:bg-gray-800">
-            <Activity size={24} />
-            <span>Status Info</span>
-          </a>
-        </nav>
-      </div>
+      <Sidebar /> {/* Use Sidebar component here */}
 
       <div className="flex-1">
         {/* Header */}
