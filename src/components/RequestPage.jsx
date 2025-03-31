@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 
 function Requests({ user }) {
-  const [Requestss, setRequestss] = useState([]);
+  const [Requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchRequestss = async () => {
+    const fetchRequests = async () => {
       try {
         const response = await fetch(`http://localhost:5000/routes/meetings/${user.username}`);
         if (!response.ok) {
           throw new Error("Failed to fetch Requests");
         }
         const data = await response.json();
-        setRequestss(data);
+        setRequests(data);
       } catch (error) {
         console.error("Error fetching Requests:", error);
       } finally {
@@ -20,11 +20,11 @@ function Requests({ user }) {
       }
     };
 
-    // Fetch Requestss initially
-    fetchRequestss();
+    // Fetch Requests initially
+    fetchRequests();
 
     // Set up polling every 3 seconds
-    const interval = setInterval(fetchRequestss, 3000);
+    const interval = setInterval(fetchRequests, 3000);
 
     // Cleanup interval on component unmount
     return () => clearInterval(interval);
@@ -37,15 +37,15 @@ function Requests({ user }) {
   return (
     <div className="min-h-screen bg-black p-8">
       <h1 className="text-2xl font-bold text-white mb-6">Requests</h1>
-      {Requestss.length === 0 ? (
+      {Requests.length === 0 ? (
         <p className="text-gray-400">No Requests available.</p>
       ) : (
         <ul className="space-y-4">
-          {Requestss.map((Requests) => (
-            <li key={Requests._id} className="bg-gray-800 p-4 rounded-lg text-white">
-              <p><strong>Teacher:</strong> {Requests.teacher}</p>
-              <p><strong>Date:</strong> {new Date(Requests.date).toLocaleString()}</p>
-              <p><strong>Status:</strong> {Requests.status}</p>
+          {Requests.map((request) => ( // Renamed 'Requests' to 'request' for clarity
+            <li key={request._id} className="bg-gray-800 p-4 rounded-lg text-white">
+              <p><strong>Teacher:</strong> {request.teacher}</p>
+              <p><strong>Date:</strong> {new Date(request.date).toLocaleString()}</p>
+              <p><strong>Status:</strong> {request.status}</p>
             </li>
           ))}
         </ul>

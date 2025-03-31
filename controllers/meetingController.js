@@ -6,7 +6,7 @@ export const getAllMeetings = async (req, res) => {
     const { name } = req.params; // Extract the student's name from the route parameter
 
     // Fetch meetings where the student matches the provided name
-    const meetings = await Meeting.find({ student: name }).populate("teacher").populate("student");
+    const meetings = await Meeting.find({ student: name }); // Removed .populate()
 
     res.status(200).json(meetings);
   } catch (error) {
@@ -43,12 +43,13 @@ export const createMeeting = async (req, res) => {
 // Fetch a single meeting by ID
 export const getMeetingById = async (req, res) => {
   try {
-    const meeting = await Meeting.findBystudent(req.params.name).populate("teacher").populate("student");
+    const meeting = await Meeting.findById(req.params.id); // Removed .populate()
     if (!meeting) {
       return res.status(404).json({ message: "Meeting not found" });
     }
     res.status(200).json(meeting);
   } catch (error) {
+    console.error("Error fetching meeting by ID:", error);
     res.status(500).json({ message: "Error fetching meeting", error: error.message });
   }
 };
