@@ -7,7 +7,6 @@ const TeacherSchema = new mongoose.Schema({
   subjects: [{ type: String }], 
   office: { type: String, required: false }, 
   image: { type: String }, 
-  schedule: [{ type: mongoose.Schema.Types.ObjectId, ref: "Schedule" }],
   firebaseUID: { type: String }, 
 });
 

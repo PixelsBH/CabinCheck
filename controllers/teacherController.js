@@ -3,7 +3,7 @@ import Teacher from "../models/Teacher.js";
 // Fetch all teachers
 export const getAllTeachers = async (req, res) => {
   try {
-    const teachers = await Teacher.find().populate("schedule");
+    const teachers = await Teacher.find();
     res.status(200).json(teachers);
   } catch (error) {
     res.status(500).json({ message: "Error fetching teachers", error: error.message });
@@ -40,7 +40,7 @@ export const createTeacher = async (req, res) => {
 // Fetch a single teacher by ID
 export const getTeacherById = async (req, res) => {
   try {
-    const teacher = await Teacher.findById(req.params.id).populate("schedule");
+    const teacher = await Teacher.findById(req.params.id);
     if (!teacher) {
       return res.status(404).json({ message: "Teacher not found" });
     }

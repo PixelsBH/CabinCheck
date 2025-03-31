@@ -3,7 +3,7 @@ import Schedule from "../models/Schedule.js";
 // Fetch all schedules
 export const getAllSchedules = async (req, res) => {
   try {
-    const schedules = await Schedule.find().populate("teacher");
+    const schedules = await Schedule.find(); // Removed populate
     res.status(200).json(schedules);
   } catch (error) {
     res.status(500).json({ message: "Error fetching schedules", error: error.message });
@@ -27,7 +27,7 @@ export const createSchedule = async (req, res) => {
 // Fetch a single schedule by ID
 export const getScheduleById = async (req, res) => {
   try {
-    const schedule = await Schedule.findById(req.params.id).populate("teacher");
+    const schedule = await Schedule.findById(req.params.id); // Removed populate
     if (!schedule) {
       return res.status(404).json({ message: "Schedule not found" });
     }
