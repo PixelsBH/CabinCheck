@@ -70,12 +70,24 @@ export const updateMeeting = async (req, res) => {
 // Delete a meeting
 export const deleteMeeting = async (req, res) => {
   try {
-    const deletedMeeting = await Meeting.findByIdAndDelete(req.params.id);
-    if (!deletedMeeting) {
-      return res.status(404).json({ message: "Meeting not found" });
+    const { teacher, username } = req.params; // Extract teacher and student from route parameters
+
+    // Log the parameters for debugging
+    console.log("Backend - Delete Request Received - Teacher:", teacher, "Student:", username);
+
+    // Find and delete all meetings where teacher and student match
+    const deletedMeetings = await Meeting.deleteMany({ teacher, student: username });
+
+    // Log the result of the delete operation
+    console.log("Backend - Deleted Meetings Count:", deletedMeetings.deletedCount);
+
+    if (deletedMeetings.deletedCount === 0) {
+      return res.status(404).json({ message: "No meetings found to delete" });
     }
-    res.status(200).json({ message: "Meeting deleted successfully" });
+
+    res.status(200).json({ message: "Meetings deleted successfully", deletedCount: deletedMeetings.deletedCount });
   } catch (error) {
-    res.status(500).json({ message: "Error deleting meeting", error: error.message });
+    console.error("Error deleting meetings:", error);
+    res.status(500).json({ message: "Error deleting meetings", error: error.message });
   }
 };
