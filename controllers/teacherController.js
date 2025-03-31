@@ -55,6 +55,23 @@ export const updateTeacher = async (req, res) => {
   }
 };
 
+// Update teacher status
+export const updateTeacherStatus = async (req, res) => {
+  try {
+    const teacher = await Teacher.findById(req.params.id);
+    if (!teacher) {
+      return res.status(404).json({ message: "Teacher not found" });
+    }
+
+    teacher.status = !teacher.status; // Toggle the status
+    await teacher.save();
+
+    res.status(200).json(teacher);
+  } catch (error) {
+    res.status(500).json({ message: "Error updating teacher status", error: error.message });
+  }
+};
+
 // Delete a teacher
 export const deleteTeacher = async (req, res) => {
   try {
