@@ -7,7 +7,7 @@ function Requests({ user }) {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/routes/meetings/${user.username}`);
+        const response = await fetch(`http://172.16.203.181:5000/routes/meetings/${user.username}`); // Replace with your IPv4 address
         if (!response.ok) {
           throw new Error("Failed to fetch Requests");
         }
@@ -33,7 +33,7 @@ function Requests({ user }) {
   const handleClick = async (teacherName, username) => {
     console.log("Frontend - Deleting request for teacher:", teacherName, "and student:", username); // Log the parameters
     try {
-      const response = await fetch(`http://localhost:5000/routes/meetings/${teacherName}/${username}`, {
+      const response = await fetch(`http://172.16.203.181:5000/routes/meetings/${teacherName}/${username}`, { // Replace with your IPv4 address
         method: "DELETE",
       });
       if (!response.ok) {

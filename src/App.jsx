@@ -112,7 +112,7 @@ function App() {
 
     const fetchNotifications = async () => {
       try {
-        const response = await fetch("http://localhost:5000/routes/notifications");
+        const response = await fetch("http://172.16.203.181:5000/routes/notifications"); // Replace with your IPv4 address
         const data = await response.json();
         if (isMounted) {
           setNotifications(data); // Update state only if the component is still mounted

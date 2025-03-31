@@ -15,13 +15,22 @@ export const createTeacher = async (req, res) => {
   try {
     const { name, email, image, firebaseUID } = req.body;
 
-    // Check if the teacher already exists
+    // Check if a teacher with the same firebaseUID already exists
     let teacher = await Teacher.findOne({ firebaseUID });
     if (teacher) {
       return res.status(200).json(teacher); // Return existing teacher
     }
 
-    // Create a new teacher if not found
+    // Check if a teacher with the same email exists (dummy entry)
+    teacher = await Teacher.findOne({ email });
+    if (teacher) {
+      // Assign the firebaseUID to the existing teacher
+      teacher.firebaseUID = firebaseUID;
+      await teacher.save();
+      return res.status(200).json(teacher); // Return updated teacher
+    }
+
+    // Create a new teacher if no matching entry is found
     const newTeacher = new Teacher({
       name,
       email,

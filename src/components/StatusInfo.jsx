@@ -14,7 +14,7 @@ function StatusInfo({user}) {
   const handleClick = async (username, professor) => {
     console.log("inside handleClick", username, professor); // Log the parameters
     try {
-      const response = await fetch('http://localhost:5000/routes/meetings', {
+      const response = await fetch('http://172.16.203.181:5000/routes/meetings', { // Replace with your IPv4 address
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ function StatusInfo({user}) {
 
     const fetchTeachers = async () => {
       try {
-        const response = await fetch("http://localhost:5000/routes/teachers");
+        const response = await fetch("http://172.16.203.181:5000/routes/teachers"); // Replace with your IPv4 address
         const data = await response.json();
         if (isMounted) {
           setTeachers(data); // Update state only if the component is still mounted

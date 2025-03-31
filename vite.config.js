@@ -6,13 +6,14 @@ export default defineConfig({
   plugins: [react()],
   server: {
     open: true,
+    host: true, // Allow access from the local network
     proxy: {
-      "/routes": "http://localhost:5000", // Proxy API requests to the backend
+      "/routes": "http://172.16.203.181:5000", // Replace with your IPv4 address
     },
   },
   resolve: {
     alias: {
-      '@config': resolve(__dirname, './config'), // Correctly resolve the config folder
+      '@config': resolve(__dirname, './config'),
     },
   },
 });

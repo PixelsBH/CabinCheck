@@ -76,7 +76,7 @@ function Login({ setUser }) {
       }
 
       // Send user data to the backend to store in MongoDB
-      await fetch("http://localhost:5000/routes/students", {
+      await fetch("http://172.16.203.181:5000/routes/students", { // Replace with your IPv4 address
         method: "POST",
         headers: {
           "Content-Type": "application/json",
