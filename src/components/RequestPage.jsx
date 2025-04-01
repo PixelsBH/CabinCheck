@@ -7,7 +7,7 @@ function Requests({ user }) {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const response = await fetch(`http://172.16.203.181:5000/routes/meetings/${user.username}`); // Replace with your IPv4 address
+        const response = await fetch(`http://192.168.137.1:5000/routes/meetings/${user.username}`); // Replace with your IPv4 address
         if (!response.ok) {
           throw new Error("Failed to fetch Requests");
         }
@@ -33,7 +33,7 @@ function Requests({ user }) {
   const handleClick = async (teacherName, username) => {
     console.log("Frontend - Deleting request for teacher:", teacherName, "and student:", username); // Log the parameters
     try {
-      const response = await fetch(`http://172.16.203.181:5000/routes/meetings/${teacherName}/${username}`, { // Replace with your IPv4 address
+      const response = await fetch(`http://192.168.137.1:5000/routes/meetings/${teacherName}/${username}`, { // Replace with your IPv4 address
         method: "DELETE",
       });
       if (!response.ok) {
@@ -76,6 +76,7 @@ function Requests({ user }) {
             <li key={request._id} className="bg-gray-800 p-4 rounded-lg text-white">
               <p><strong>Teacher:</strong> {request.teacher}</p>
               <p><strong>Date:</strong> {new Date(request.date).toLocaleString()}</p>
+              <p><strong>Time Slot:</strong> {request.meetTime} - {request.endTime}</p> {/* Display time slot */}
               <p><strong>Status:</strong> {request.status}</p>
               <button
                 onClick={() => handleClick(request.teacher, user.username)}

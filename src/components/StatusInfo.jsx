@@ -2,36 +2,42 @@ import React, { useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
 import { auth } from '../../config/firebase'; // Import Firebase auth
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
-//import axios from 'axios'; // Import axios for API requests
-//import Meeting from './Meeting'; // Import Meeting component
 
-function StatusInfo({user}) {
+function StatusInfo({ user }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [firebaseUser, setFirebaseUser] = useState(null);
   const [teachers, setTeachers] = useState([]); // State for teachers data
+  const [selectedTime, setSelectedTime] = useState("9:00 AM"); // Default time
+  const [showPopup, setShowPopup] = useState({ visible: false, professor: null }); // Popup visibility and professor
   const navigate = useNavigate();
 
-  const handleClick = async (username, professor) => {
-    console.log("inside handleClick", username, professor); // Log the parameters
+  const handleRequestMeeting = (professor) => {
+    setShowPopup({ visible: true, professor }); // Pass the professor to the popup state
+  };
+
+  const handleConfirmMeeting = async () => {
+    setShowPopup({ visible: false, professor: null }); // Hide the popup
     try {
-      const response = await fetch('http://172.16.203.181:5000/routes/meetings', { // Replace with your IPv4 address
+      const response = await fetch('http://192.168.137.1:5000/routes/meetings', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          teacher: professor, // Teacher's name
-          student: username, // Student's name
+          teacher: showPopup.professor, // Use the professor from the popup state
+          student: user.username, // Student's username
           date: new Date().toISOString(), // Current date
-          status: 'Pending'
-        })
+          status: 'Pending',
+          meetTime: selectedTime, // Include selected time
+        }),
       });
-  
+
+      const data = await response.json();
       if (!response.ok) {
+        console.error("Server Error:", data);
         throw new Error('Failed to send meeting request');
       }
-  
-      const data = await response.json();
+
       console.log('Meeting request sent:', data);
       alert('Meeting request sent successfully!');
     } catch (error) {
@@ -39,6 +45,7 @@ function StatusInfo({user}) {
       alert('Failed to send meeting request.');
     }
   };
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
       if (!currentUser) {
@@ -55,7 +62,7 @@ function StatusInfo({user}) {
 
     const fetchTeachers = async () => {
       try {
-        const response = await fetch("http://172.16.203.181:5000/routes/teachers"); // Replace with your IPv4 address
+        const response = await fetch("http://192.168.137.1:5000/routes/teachers"); // Replace with your IPv4 address
         const data = await response.json();
         if (isMounted) {
           setTeachers(data); // Update state only if the component is still mounted
@@ -125,25 +132,58 @@ function StatusInfo({user}) {
               </div>
             </div>
             <div className="flex justify-between items-center pt-4 border-t border-gray-700">
-      <span className="text-gray-300">{teacher.office}</span>
-      <button
-        className="px-3 py-1 bg-blue-600 text-white rounded-full text-sm mx-2"
-        onClick={() => handleClick(user.username, teacher.name)}
-      >
-        Request Meeting
-      </button>
-      <span className={`px-3 py-1 rounded-full text-sm ${
-        teacher.status 
-          ? 'bg-green-900 text-green-300' 
-          : 'bg-red-900 text-red-300'
-      }`}>
-        {teacher.status ? 'Available' : 'Unavailable'}
-      </span>
-    </div>
-
+              <span className="text-gray-300">{teacher.office}</span>
+              <button
+                className="px-3 py-1 bg-blue-600 text-white rounded-full text-sm mx-2"
+                onClick={() => handleRequestMeeting(teacher.name)} // Pass teacher name
+              >
+                Request Meeting
+              </button>
+              <div className={`px-3 py-1 rounded-full text-sm ${
+                teacher.status 
+                  ? 'bg-green-900 text-green-300' 
+                  : 'bg-red-900 text-red-300'
+              }`}>
+                {teacher.status ? 'In Cabin' : 'Out of Cabin'}
+              </div>
+            </div>
           </div>
         ))}
       </div>
+
+      {/* Popup for selecting meeting time */}
+      {showPopup.visible && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-gray-800 p-6 rounded-lg">
+            <h2 className="text-white mb-4">Select Meeting Time</h2>
+            <select
+              value={selectedTime}
+              onChange={(e) => setSelectedTime(e.target.value)}
+              className="bg-gray-700 text-white p-2 rounded"
+            >
+              {["9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM"].map((time) => (
+                <option key={time} value={time}>
+                  {time}
+                </option>
+              ))}
+            </select>
+            <div className="mt-4 flex justify-end">
+              <button
+                onClick={() => setShowPopup({ visible: false, professor: null })}
+                className="bg-red-600 text-white px-4 py-2 rounded mr-2"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmMeeting} // Call handleConfirmMeeting
+                className="bg-blue-600 text-white px-4 py-2 rounded"
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

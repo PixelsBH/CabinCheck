@@ -17,15 +17,22 @@ export const getAllMeetings = async (req, res) => {
 
 // Create a new meeting
 export const createMeeting = async (req, res) => {
-    console.log("inside createMeeting"); // Log to check if the function is called  
+  console.log("inside createMeeting"); // Log to check if the function is called  
   try {
-    const { teacher, student, date, status } = req.body;
+    const { teacher, student, date, status, meetTime } = req.body; // Include meetTime
 
     // Log the incoming request body
     console.log("Request Body:", req.body);
 
+    // Validate meetTime is within allowed range
+    const allowedTimes = ["9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM"];
+    if (!allowedTimes.includes(meetTime)) {
+      console.error("Invalid meeting time:", meetTime);
+      return res.status(400).json({ message: "Invalid meeting time selected" });
+    }
+
     // Create a new meeting
-    const newMeeting = new Meeting({ teacher, student, date, status });
+    const newMeeting = new Meeting({ teacher, student, date, status, meetTime });
     await newMeeting.save();
 
     // Log the saved meeting
