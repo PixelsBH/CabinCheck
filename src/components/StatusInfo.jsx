@@ -18,7 +18,30 @@ function StatusInfo({ user }) {
   const handleConfirmMeeting = async () => {
     setShowPopup({ visible: false, professor: null }); // Hide the popup
     try {
-      const response = await fetch('http://192.168.137.1:5000/routes/meetings', {
+      if (!selectedTime) {
+        console.error("Selected time is null or undefined");
+        alert("Please select a valid meeting time.");
+        return;
+      }
+
+      const currentDate = new Date(); // Get the current date
+      const match = selectedTime.match(/(\d+):(\d+)\s(AM|PM)/); // Validate selectedTime format
+      if (!match) {
+        console.error("Invalid time format:", selectedTime);
+        alert("Invalid time format. Please select a valid time.");
+        return;
+      }
+
+      const [_, hour, minute, period] = match; // Extract hour, minute, and period
+      let startHour = parseInt(hour);
+      if (period === "PM" && startHour !== 12) startHour += 12; // Convert PM to 24-hour format
+      if (period === "AM" && startHour === 12) startHour = 0; // Handle midnight
+
+      // Set the time directly in UTC
+      currentDate.setUTCHours(startHour, parseInt(minute), 0, 0); // Set hours and minutes in UTC
+      console.log("Selected time (UTC):", currentDate.toISOString()); // Debugging log
+
+      const response = await fetch('http://172.16.203.181:5000/routes/meetings', { // Updated URL to match backend
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -26,20 +49,20 @@ function StatusInfo({ user }) {
         body: JSON.stringify({
           teacher: showPopup.professor, // Use the professor from the popup state
           student: user.username, // Student's username
-          date: new Date().toISOString(), // Current date
+          date: new Date().toISOString(), // Use the current date in UTC
           status: 'Pending',
-          meetTime: selectedTime, // Include selected time
+          meetTime: currentDate.toISOString(), // Send meetTime as ISO string
         }),
       });
 
-      const data = await response.json();
       if (!response.ok) {
-        console.error("Server Error:", data);
+        const text = await response.text(); // Read raw response text
+        console.error("Server Error:", text); // Log raw response
         throw new Error('Failed to send meeting request');
       }
 
+      const data = await response.json();
       console.log('Meeting request sent:', data);
-      alert('Meeting request sent successfully!');
     } catch (error) {
       console.error('Error sending meeting request:', error);
       alert('Failed to send meeting request.');
@@ -62,7 +85,7 @@ function StatusInfo({ user }) {
 
     const fetchTeachers = async () => {
       try {
-        const response = await fetch("http://192.168.137.1:5000/routes/teachers"); // Replace with your IPv4 address
+        const response = await fetch("http://172.16.203.181:5000/routes/teachers"); // Replace with your IPv4 address
         const data = await response.json();
         if (isMounted) {
           setTeachers(data); // Update state only if the component is still mounted

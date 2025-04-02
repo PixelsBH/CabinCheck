@@ -7,7 +7,7 @@ function Requests({ user }) {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const response = await fetch(`http://192.168.137.1:5000/routes/meetings/${user.username}`); // Replace with your IPv4 address
+        const response = await fetch(`http://172.16.203.181:5000/routes/meetings/${user.username}`); // Replace with your IPv4 address
         if (!response.ok) {
           throw new Error("Failed to fetch Requests");
         }
@@ -33,7 +33,7 @@ function Requests({ user }) {
   const handleClick = async (teacherName, username) => {
     console.log("Frontend - Deleting request for teacher:", teacherName, "and student:", username); // Log the parameters
     try {
-      const response = await fetch(`http://192.168.137.1:5000/routes/meetings/${teacherName}/${username}`, { // Replace with your IPv4 address
+      const response = await fetch(`http://172.16.203.181:5000/routes/meetings/${teacherName}/${username}`, { // Replace with your IPv4 address
         method: "DELETE",
       });
       if (!response.ok) {
@@ -47,6 +47,19 @@ function Requests({ user }) {
       console.error("Error deleting request:", error);
     }
   };
+
+  function formatTimeSlot(startTime, endTime) {
+    const formatTime = (time) => {
+      const date = new Date(time);
+      return date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+        timeZone: 'UTC' // Ensure the time is displayed in UTC
+      });
+    };
+    return `${formatTime(startTime)} - ${formatTime(endTime)}`;
+  }
 
   if (loading) {
     return <div className="text-white">Loading Requests...</div>;
@@ -76,7 +89,7 @@ function Requests({ user }) {
             <li key={request._id} className="bg-gray-800 p-4 rounded-lg text-white">
               <p><strong>Teacher:</strong> {request.teacher}</p>
               <p><strong>Date:</strong> {new Date(request.date).toLocaleString()}</p>
-              <p><strong>Time Slot:</strong> {request.meetTime} - {request.endTime}</p> {/* Display time slot */}
+              <p><strong>Time Slot:</strong> {formatTimeSlot(request.meetTime, request.endTime)} {/* Pass both start and end times */}</p>
               <p><strong>Status:</strong> {request.status}</p>
               <button
                 onClick={() => handleClick(request.teacher, user.username)}

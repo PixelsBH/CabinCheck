@@ -24,15 +24,39 @@ export const createMeeting = async (req, res) => {
     // Log the incoming request body
     console.log("Request Body:", req.body);
 
-    // Validate meetTime is within allowed range
-    const allowedTimes = ["9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM"];
-    if (!allowedTimes.includes(meetTime)) {
-      console.error("Invalid meeting time:", meetTime);
+    if (!meetTime) {
+      console.error("meetTime is null or undefined");
+      return res.status(400).json({ message: "meetTime is required" });
+    }
+
+    const allowedTimes = [
+      "09:00:00.000",
+      "10:00:00.000",
+      "11:00:00.000",
+      "12:00:00.000",
+      "13:00:00.000",
+      "14:00:00.000",
+      "15:00:00.000",
+      "16:00:00.000",
+    ];
+
+    const meetDate = new Date(meetTime); // Convert meetTime to Date object
+    if (isNaN(meetDate.getTime())) {
+      console.error("Invalid meetTime format:", meetTime);
+      return res.status(400).json({ message: "Invalid meetTime format" });
+    }
+
+    // Extract the time portion in UTC
+    const timeString = meetDate.toISOString().split("T")[1].split("Z")[0]; // Extract time in HH:mm:ss.sss format
+    console.log("Extracted time (UTC):", timeString); // Debugging log
+
+    if (!allowedTimes.includes(timeString)) {
+      console.error("Invalid meeting time:", timeString);
       return res.status(400).json({ message: "Invalid meeting time selected" });
     }
 
     // Create a new meeting
-    const newMeeting = new Meeting({ teacher, student, date, status, meetTime });
+    const newMeeting = new Meeting({ teacher, student, date, status, meetTime: meetDate });
     await newMeeting.save();
 
     // Log the saved meeting
