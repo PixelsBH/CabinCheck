@@ -33,6 +33,7 @@ function Notifications({ notifications }) {
                   ? new Date(notification.date).toLocaleDateString()
                   : 'Unknown date'}
               </span>
+              <p className="text-sm text-gray-400">Posted by {notification.teacher || 'Unknown'}</p> {/* Display teacher */}
             </div>
           </div>
         ))
@@ -49,6 +50,7 @@ Notifications.propTypes = {
       title: PropTypes.string.isRequired, // Matches the Notification model
       message: PropTypes.string.isRequired, // Matches the Notification model
       date: PropTypes.string, // Matches the Notification model
+      teacher: PropTypes.string, // Matches the Notification model
     })
   ).isRequired,
 };

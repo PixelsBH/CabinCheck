@@ -71,17 +71,18 @@ export const createMeeting = async (req, res) => {
   }
 };
 
-// Fetch a single meeting by ID
-export const getMeetingById = async (req, res) => {
+// Fetch meetings by teacher email
+export const getMeetingsByTeacherEmail = async (req, res) => {
   try {
-    const meeting = await Meeting.findById(req.params.id); // Removed .populate()
-    if (!meeting) {
-      return res.status(404).json({ message: "Meeting not found" });
+    const { email } = req.params; // Extract the teacher's email from the route parameter
+    const meetings = await Meeting.find({ teacher: email }); // Fetch meetings by teacher email
+    if (!meetings || meetings.length === 0) {
+      return res.status(404).json({ message: "No meetings found for the given teacher email" });
     }
-    res.status(200).json(meeting);
+    res.status(200).json(meetings);
   } catch (error) {
-    console.error("Error fetching meeting by ID:", error);
-    res.status(500).json({ message: "Error fetching meeting", error: error.message });
+    console.error("Error fetching meetings by teacher email:", error);
+    res.status(500).json({ message: "Error fetching meetings", error: error.message });
   }
 };
 
@@ -120,5 +121,32 @@ export const deleteMeeting = async (req, res) => {
   } catch (error) {
     console.error("Error deleting meetings:", error);
     res.status(500).json({ message: "Error deleting meetings", error: error.message });
+  }
+};
+
+// Update meeting status (approve or reject)
+export const patchMeetingStatus = async (req, res) => {
+  try {
+    const { id } = req.params; // Extract meeting ID from route parameters
+    const { status } = req.body; // Extract status from request body
+
+    if (!["Approved", "Rejected"].includes(status)) {
+      return res.status(400).json({ message: "Invalid status. Allowed values are 'Approved' or 'Rejected'." });
+    }
+
+    const updatedMeeting = await Meeting.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+
+    if (!updatedMeeting) {
+      return res.status(404).json({ message: "Meeting not found" });
+    }
+
+    res.status(200).json({ message: `Meeting ${status.toLowerCase()} successfully`, updatedMeeting });
+  } catch (error) {
+    console.error("Error updating meeting status:", error);
+    res.status(500).json({ message: "Error updating meeting status", error: error.message });
   }
 };

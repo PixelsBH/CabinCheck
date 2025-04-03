@@ -13,9 +13,9 @@ export const getAllNotifications = async (req, res) => {
 // Create a new notification
 export const createNotification = async (req, res) => {
   try {
-    const { title, message, date } = req.body;
+    const { title, message, teacher } = req.body; // Include teacher in request body
 
-    const newNotification = new Notification({ title, message, date });
+    const newNotification = new Notification({ title, message, teacher }); // Add teacher field
     await newNotification.save();
 
     res.status(201).json(newNotification);
@@ -24,10 +24,10 @@ export const createNotification = async (req, res) => {
   }
 };
 
-// Fetch a single notification by ID
-export const getNotificationById = async (req, res) => {
+// Fetch a single notification by teacher's name
+export const getNotificationByTeacher = async (req, res) => {
   try {
-    const notification = await Notification.findById(req.params.id);
+    const notification = await Notification.findOne({ teacher: req.params.teacher });
     if (!notification) {
       return res.status(404).json({ message: "Notification not found" });
     }
@@ -37,10 +37,10 @@ export const getNotificationById = async (req, res) => {
   }
 };
 
-// Delete a notification
-export const deleteNotification = async (req, res) => {
+// Delete a notification by teacher's name
+export const deleteNotificationByTeacher = async (req, res) => {
   try {
-    const deletedNotification = await Notification.findByIdAndDelete(req.params.id);
+    const deletedNotification = await Notification.findOneAndDelete({ teacher: req.params.teacher });
     if (!deletedNotification) {
       return res.status(404).json({ message: "Notification not found" });
     }
@@ -48,4 +48,4 @@ export const deleteNotification = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Error deleting notification", error: error.message });
   }
-};
+}

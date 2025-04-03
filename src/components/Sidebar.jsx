@@ -15,10 +15,10 @@ function Sidebar() {
           <Activity size={24} />
           <span>Status Info</span>
         </Link>
-        <Link to="/requests" className="flex items-center space-x-3 text-white hover:text-gray-300 p-2 rounded-lg hover:bg-gray-800">
+        {/* <Link to="/requests" className="flex items-center space-x-3 text-white hover:text-gray-300 p-2 rounded-lg hover:bg-gray-800">
           <Bell size={24} />
           <span>Requests</span>
-        </Link>
+        </Link> */}
       </nav>
     </div>
   );

@@ -36,7 +36,6 @@ app.use("/routes/teachers", teacherRoutes); // Add teacher routes
 app.use("/routes/students", studentRoutes); // Add student routes
 app.use("/routes/schedules", scheduleRoutes); // Add schedule routes
 app.use("/routes/notifications", notificationRoutes); // Add notification routes
-app.use("/routes/meetings", meetingRoutes); // Ensure this is correct
 
 // Default route for root path
 app.get("/", (req, res) => {

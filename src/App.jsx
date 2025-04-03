@@ -6,7 +6,7 @@ import WelcomeCard from "./components/WelcomeCard";
 import Notifications from "./components/Notification";
 import ProfilePage from "./components/ProfilePage";
 import StatusInfo from "./components/StatusInfo";
-import Requests from "./components/RequestPage";
+// import Requests from "./components/RequestPage"; // Commented out Requests import
 import Login from "./Login";
 import Sidebar from "./components/Sidebar"; // Import Sidebar component
 import PropTypes from "prop-types";
@@ -115,7 +115,7 @@ function App() {
         const response = await fetch("http://172.16.203.181:5000/routes/notifications"); // Replace with your IPv4 address
         const data = await response.json();
         if (isMounted) {
-          setNotifications(data); // Update state only if the component is still mounted
+          setNotifications(data); // Ensure teacher field is part of the fetched data
         }
       } catch (error) {
         console.error("Error fetching notifications:", error);
@@ -199,7 +199,7 @@ function App() {
           )
         }
       />
-      <Route
+      {/* <Route
         path="/requests"
         element={
           user ? (
@@ -210,7 +210,7 @@ function App() {
             <Navigate to="/login" />
           )
         }
-      />
+      /> */}
       <Route path="/login" element={<Login setUser={setUser} />} />
     </Routes>
   );
