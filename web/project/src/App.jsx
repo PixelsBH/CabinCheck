@@ -16,14 +16,14 @@ const Layout = ({ user, notifications, showDashboard = true, children }) => {
   return (
     <div className="min-h-screen bg-black flex">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-900 p-6 flex flex-col">
+      <div className="w-64 bg-black p-4 p-6 flex flex-col">
         <h1 className="text-white text-2xl font-bold mb-8">Cabin Check</h1>
         <nav className="space-y-4">
-          <a href="/" className="flex items-center space-x-3 text-white hover:text-gray-300 p-2 rounded-lg hover:bg-gray-800">
+          <a href="/" className="flex items-center space-x-3 text-white hover:text-gray-300 p-2 rounded-lg hover:bg-gray-900">
             <LayoutDashboard size={24} />
             <span>Dashboard</span>
           </a>
-          <a href="/status" className="flex items-center space-x-3 text-white hover:text-gray-300 p-2 rounded-lg hover:bg-gray-800">
+          <a href="/status" className="flex items-center space-x-3 text-white hover:text-gray-300 p-2 rounded-lg hover:bg-gray-900">
             <Activity size={24} />
             <span>Status Info</span>
           </a>
@@ -32,7 +32,7 @@ const Layout = ({ user, notifications, showDashboard = true, children }) => {
 
       <div className="flex-1">
         {/* Header */}
-        <header className="bg-gray-900 px-6 py-4">
+        <header className="bg-black p-4 px-6 py-4">
           <div className="flex justify-end">
             <div className="relative">
               <button 
@@ -49,7 +49,7 @@ const Layout = ({ user, notifications, showDashboard = true, children }) => {
               </button>
               
               {showProfileMenu && (
-                <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg py-1 z-10">
+                <div className="absolute right-0 mt-2 w-48 bg-gray-900 rounded-md shadow-lg py-1 z-10">
                   <a href="/profile" className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">
                     View Profile
                   </a>
@@ -102,39 +102,9 @@ Layout.propTypes = {
 };
 
 function App() {
-  const [user] = useState({
-    name: "John Doe",
-    year: "3rd Year",
-    profilePic: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=100&h=100&fit=crop",
-  });
-
-  const notifications = [
-    {
-      id: 1,
-      title: "Assignment Due",
-      message: "Your Advanced Mathematics assignment is due tomorrow",
-      time: "2 hours ago",
-      type: "urgent",
-    },
-    {
-      id: 2,
-      title: "Grade Posted",
-      message: "New grade posted for Computer Science",
-      time: "5 hours ago",
-      type: "info",
-    },
-    {
-      id: 3,
-      title: "Event Reminder",
-      message: "Student Council meeting tomorrow at 3 PM",
-      time: "1 day ago",
-      type: "info",
-    },
-  ];
 
   return (
     <div>
-      hello
     </div>
     // <Router>
     //   <Routes>

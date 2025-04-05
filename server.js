@@ -14,7 +14,6 @@ import teacherRoutes from "./routes/teacherRoutes.js";
 import studentRoutes from "./routes/studentRoutes.js";
 import scheduleRoutes from "./routes/scheduleRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
-import meetingRoutes from "./routes/meetingRoutes.js";
 import { auth } from "./config/firebase.js"; // Import Firebase auth from firebase.js
 import { getFirestore, doc, getDoc } from "firebase/firestore"; // Import Firestore functions
 

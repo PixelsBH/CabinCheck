@@ -9,7 +9,7 @@ function Notifications({ notifications }) {
       {notifications.map((notification) => (
         <div
           key={notification.id}
-          className="bg-gray-800 rounded-lg p-4 flex items-start space-x-4"
+          className="bg-gray-900 rounded-lg p-4 flex items-start space-x-4"
         >
           {notification.type === 'urgent' ? (
             <AlertCircle className="text-red-500" />

@@ -27,8 +27,8 @@ const getDepartment = (email) => {
 
 function ProfilePage({ user }) {
   return (
-    <div className="absolute top-0 left-64 right-0 min-h-screen bg-gray-900 p-8">
-      <div className="max-w-2xl mx-auto bg-gray-800 rounded-lg p-8">
+    <div className="absolute top-0 left-64 right-0 min-h-screen bg-black p-4 p-8">
+      <div className="max-w-2xl mx-auto bg-gray-900 rounded-lg p-8">
         <div className="flex flex-col items-center space-y-4">
           <img
             src={user?.photoURL || "/default-profile.png"} // Use fallback image

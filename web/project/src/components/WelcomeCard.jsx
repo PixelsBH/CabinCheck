@@ -9,7 +9,7 @@ function WelcomeCard() {
   });
 
   return (
-    <div className="bg-gray-900 rounded-lg p-8">
+    <div className="bg-black p-4 rounded-lg p-8">
       <div className="flex items-center justify-between">
         <div className="space-y-2">
           <p className="text-gray-400">{currentDate}</p>

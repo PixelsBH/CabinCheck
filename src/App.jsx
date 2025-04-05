@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
-import Profile from "./components/Profile";
 import WelcomeCard from "./components/WelcomeCard";
 import Notifications from "./components/Notification";
 import ProfilePage from "./components/ProfilePage";
@@ -31,7 +30,7 @@ const Layout = ({ user, notifications, showDashboard = true, children }) => {
 
       <div className="flex-1">
         {/* Header */}
-        <header className="bg-gray-900 px-6 py-4">
+        <header className="bg-black p-4 px-6 py-4">
           <div className="flex justify-end">
             <div className="relative">
               <button
@@ -48,7 +47,7 @@ const Layout = ({ user, notifications, showDashboard = true, children }) => {
               </button>
 
               {showProfileMenu && (
-                <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg py-1 z-10">
+                <div className="absolute right-0 mt-2 w-48 bg-gray-900 rounded-md shadow-lg py-1 z-10">
                   <a href="/profile" className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">
                     View Profile
                   </a>
@@ -65,7 +64,7 @@ const Layout = ({ user, notifications, showDashboard = true, children }) => {
         </header>
 
         {/* Main Content */}
-        <main className="p-8">
+        <main className="p-8 bg-black min-h-screen">
           {children || (
             showDashboard ? (
               <>

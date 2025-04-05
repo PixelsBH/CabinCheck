@@ -114,8 +114,8 @@ function StatusInfo({ user }) {
   return (
     <div className="min-h-screen bg-black p-8">
       {/* Header */}
-      <header className="flex justify-between items-center mb-8">
-        <div className="flex items-center space-x-3 text-white">
+      <header className="flex justify-between items-center mb-8 bg-black p-4 rounded-lg"> {/* Ensure header is fully black */}
+        <div className="flex items-center space-x-3 text-white bg-black p-4 rounded-lg"> {/* Set background to black */}
           <img
             src={firebaseUser?.photoURL || "/default-profile.png"} // Use fallback image
             alt={firebaseUser?.displayName || "User"}
@@ -126,12 +126,12 @@ function StatusInfo({ user }) {
             <span className="text-sm text-gray-400">{firebaseUser?.email || 'No email available'}</span>
           </div>
         </div>
-        <div className="relative">
+        <div className="relative bg-black p-2 rounded-lg"> {/* Ensure search bar container is black */}
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
           <input
             type="text"
             placeholder="Search teachers..."
-            className="pl-10 pr-4 py-2 bg-gray-800 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="pl-10 pr-4 py-2 bg-black rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -141,7 +141,7 @@ function StatusInfo({ user }) {
       {/* Teachers List */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredTeachers.map(teacher => (
-          <div key={teacher._id} className="bg-gray-800 rounded-lg p-6 space-y-4">
+          <div key={teacher._id} className="bg-gray-900 rounded-lg p-6 space-y-4">
             <div className="flex items-center space-x-4">
               <img
                 src={teacher.image}
@@ -177,7 +177,7 @@ function StatusInfo({ user }) {
       {/* Popup for selecting meeting time */}
       {showPopup.visible && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-gray-800 p-6 rounded-lg">
+          <div className="bg-gray-900 p-6 rounded-lg">
             <h2 className="text-white mb-4">Select Meeting Time</h2>
             <select
               value={selectedTime}

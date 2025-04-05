@@ -86,7 +86,7 @@ function Requests({ user }) {
       ) : (
         <ul className="space-y-4">
           {latestRequests.map((request) => (
-            <li key={request._id} className="bg-gray-800 p-4 rounded-lg text-white">
+            <li key={request._id} className="bg-gray-900 p-4 rounded-lg text-white">
               <p><strong>Teacher:</strong> {request.teacher}</p>
               <p><strong>Date:</strong> {new Date(request.date).toLocaleString()}</p>
               <p><strong>Time Slot:</strong> {formatTimeSlot(request.meetTime, request.endTime)} {/* Pass both start and end times */}</p>

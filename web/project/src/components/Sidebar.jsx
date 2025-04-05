@@ -4,7 +4,7 @@ import { Home, User, Bell, Settings } from 'lucide-react';
 
 function Sidebar() {
   return (
-    <div className="w-64 bg-gray-900 p-6">
+    <div className="w-64 bg-black p-4 p-6">
       <div className="space-y-6">
         <Link to="/" className="flex items-center space-x-3 text-white hover:text-gray-300">
           <Home size={24} />

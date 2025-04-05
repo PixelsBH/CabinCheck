@@ -5,7 +5,7 @@ import { AlertCircle, Info } from 'lucide-react';
 function Notifications({ notifications }) {
   useEffect(() => {
     if (notifications.length > 0) {
-      console.debug("Notifications received:", notifications); // Use console.debug for less intrusive logging
+      console.debug("Notifications received:", notifications); 
     }
   }, [notifications]);
 
@@ -16,7 +16,7 @@ function Notifications({ notifications }) {
         notifications.map((notification, index) => (
           <div
             key={notification.id || index} // Use index as fallback if id is undefined
-            className="bg-gray-800 rounded-lg p-4 flex items-start space-x-4"
+            className="bg-gray-900 rounded-lg p-4 flex items-start space-x-4"
           >
             {notification.type === 'urgent' ? (
               <AlertCircle className="text-red-500" />
