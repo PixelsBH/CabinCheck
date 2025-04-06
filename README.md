@@ -1,8 +1,8 @@
-# cabin_check
+# Cabin Check
 
 Cabin Check helps students quickly find professors and check their real-time availability in their cabins, ensuring efficient campus communication. It also allows professors to check their schedules, add calender events, send reminders to students.
 
-Currently it is made with the goal of helping students and professors of IIIT Kottayam.
+This is a Flutter and React Project with Express.js and Node.js for backend and MongoDB Atlas for database. Currently it is made with the goal of helping students and professors of IIIT Kottayam.
 
 ## Installtion
 
