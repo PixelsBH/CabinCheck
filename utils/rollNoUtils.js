@@ -1,5 +1,5 @@
 export const extractRollNo = (email) => {
-  const regex = /^([\w\d]+)(\d{2})(bcs|bec|bcy|bcd)(\d{1,3})@iiitkottayam\.ac\.in$/i;
+  const regex = /^([a-zA-Z]+)(\d{2})(bcs|bec|bcy|bcd)(\d{1,3})@iiitkottayam\.ac\.in$/i;
   const match = email.match(regex);
 
   if (!match) return "Invalid Email";

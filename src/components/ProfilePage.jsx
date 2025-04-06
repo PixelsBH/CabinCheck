@@ -36,7 +36,6 @@ function ProfilePage({ user }) {
             className="w-32 h-32 rounded-full"
           />
           <h1 className="text-3xl font-bold text-black">{user?.displayName || "Guest"}</h1>
-          <p className="text-gray-700">{user?.username || "No username available"}</p>
           <div className="w-full mt-8">
             <h2 className="text-xl font-semibold mb-4 text-black">Profile Information</h2>
             <div className="space-y-4">
