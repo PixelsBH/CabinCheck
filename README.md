@@ -1,16 +1,14 @@
 # cabin_check
 
-A new Flutter project.
+Cabin Check helps students quickly find professors and check their real-time availability in their cabins, ensuring efficient campus communication. It also allows professors to check their schedules, add calender events, send reminders to students.
 
-## Getting Started
+Currently it is made with the goal of helping students and professors of IIIT Kottayam.
 
-This project is a starting point for a Flutter application.
+## Installtion
 
-A few resources to get you started if this is your first Flutter project:
+1. Run `npm install`
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+2. Use vscode search function to find local ip (eg. 172.16.203.181) and replace with your own local IPv4
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+3. Run `npm run dev`
+

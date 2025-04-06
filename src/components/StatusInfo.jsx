@@ -112,26 +112,26 @@ function StatusInfo({ user }) {
   );
 
   return (
-    <div className="min-h-screen bg-black p-8">
+    <div className="min-h-screen bg-white p-8">
       {/* Header */}
-      <header className="flex justify-between items-center mb-8 bg-black p-4 rounded-lg"> {/* Ensure header is fully black */}
-        <div className="flex items-center space-x-3 text-white bg-black p-4 rounded-lg"> {/* Set background to black */}
+      <header className="flex justify-between items-center mb-8 bg-white p-4 rounded-lg border border-gray-300 shadow-md "> {}
+        <div className="flex items-center space-x-3 text-white bg-white p-4 rounded-lg"> {}
           <img
-            src={firebaseUser?.photoURL || "/default-profile.png"} // Use fallback image
+            src={firebaseUser?.photoURL || "/default-profile.png"} 
             alt={firebaseUser?.displayName || "User"}
             className="w-10 h-10 rounded-full"
           />
           <div className="flex flex-col">
-            <span className="font-semibold">{firebaseUser?.displayName || 'Guest'}</span>
-            <span className="text-sm text-gray-400">{firebaseUser?.email || 'No email available'}</span>
+            <span className="font-semibold text-black">{firebaseUser?.displayName || 'Guest'}</span>
+            <span className="text-sm text-gray-600">{firebaseUser?.email || 'No email available'}</span>
           </div>
         </div>
-        <div className="relative bg-black p-2 rounded-lg"> {/* Ensure search bar container is black */}
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+        <div className="relative white p-2 rounded-lg"> {}
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600 border " size={20} />
           <input
             type="text"
-            placeholder="Search teachers..."
-            className="pl-10 pr-4 py-2 bg-black rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+            placeholder="   Search teachers..."
+            className="w-72 bg-gray-100 text-gray-700 px-5 py-3 rounded-full border-0 focus:outline-none focus:ring-2 focus:ring-black transition-all placeholder-gray-400 shadow -md hover:shadow-lg transition-shadow duration-300" 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -141,7 +141,7 @@ function StatusInfo({ user }) {
       {/* Teachers List */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredTeachers.map(teacher => (
-          <div key={teacher._id} className="bg-gray-900 rounded-lg p-6 space-y-4">
+          <div key={teacher._id} className="bg-gray-30 rounded-lg p-6 space-y-4 border border-gray-300 shadow-md hover:shadow-lg transition-shadow duration-300"> 
             <div className="flex items-center space-x-4">
               <img
                 src={teacher.image}
@@ -149,23 +149,17 @@ function StatusInfo({ user }) {
                 className="w-16 h-16 rounded-full"
               />
               <div>
-                <h3 className="text-lg font-semibold text-white">{teacher.name}</h3>
-                <p className="text-gray-400 text-sm">{teacher.email}</p> {/* Display email */}
-                <p className="text-gray-400">{teacher.subjects.join(", ")}</p>
+                <h3 className="text-lg font-semibold text-black">{teacher.name}</h3>
+                <p className="text-gray-600 text-sm">{teacher.email}</p> {/* Display email */}
+                <p className="text-gray-600">{teacher.subjects.join(", ")}</p>
               </div>
             </div>
             <div className="flex justify-between items-center pt-4 border-t border-gray-700">
-              <span className="text-gray-300">{teacher.office}</span>
-              <button
-                className="px-3 py-1 bg-blue-600 text-white rounded-full text-sm mx-2"
-                onClick={() => handleRequestMeeting(teacher.name)} // Pass teacher name
-              >
-                Request Meeting
-              </button>
-              <div className={`px-3 py-1 rounded-full text-sm ${
+              <span className="text-sm font-medium bg-gray-200 px-4 py-1.5 rounded-full text-gray-700">{teacher.office}</span>
+              <div className={`px-4 py-1.5 rounded-full text-sm font-medium ${
                 teacher.status 
-                  ? 'bg-green-900 text-green-300' 
-                  : 'bg-red-900 text-red-300'
+                  ? 'bg-green-100 text-green-700' 
+                  : 'bg-red-100 text-red-600'
               }`}>
                 {teacher.status ? 'In Cabin' : 'Out of Cabin'}
               </div>
@@ -173,40 +167,6 @@ function StatusInfo({ user }) {
           </div>
         ))}
       </div>
-
-      {/* Popup for selecting meeting time */}
-      {showPopup.visible && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-gray-900 p-6 rounded-lg">
-            <h2 className="text-white mb-4">Select Meeting Time</h2>
-            <select
-              value={selectedTime}
-              onChange={(e) => setSelectedTime(e.target.value)}
-              className="bg-gray-700 text-white p-2 rounded"
-            >
-              {["9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM"].map((time) => (
-                <option key={time} value={time}>
-                  {time}
-                </option>
-              ))}
-            </select>
-            <div className="mt-4 flex justify-end">
-              <button
-                onClick={() => setShowPopup({ visible: false, professor: null })}
-                className="bg-red-600 text-white px-4 py-2 rounded mr-2"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleConfirmMeeting} // Call handleConfirmMeeting
-                className="bg-blue-600 text-white px-4 py-2 rounded"
-              >
-                Confirm
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

@@ -14,7 +14,10 @@ export const getAllNotifications = async (req, res) => {
 export const createNotification = async (req, res) => {
   try {
     const { title, message, teacher } = req.body; // Include teacher in request body
-
+    const notification = await Notification.findOne({ teacher });
+    if (notification) {
+      return res.status(409).json({ message: "Notification for this teacher already exists" });
+    }
     const newNotification = new Notification({ title, message, teacher }); // Add teacher field
     await newNotification.save();
 
@@ -29,7 +32,7 @@ export const getNotificationByTeacher = async (req, res) => {
   try {
     const notification = await Notification.findOne({ teacher: req.params.teacher });
     if (!notification) {
-      return res.status(404).json({ message: "Notification not found" });
+      return res.status(201).json({ message: "No existing notification" });
     }
     res.status(200).json(notification);
   } catch (error) {

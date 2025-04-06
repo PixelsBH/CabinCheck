@@ -8,63 +8,23 @@ import StatusInfo from "./components/StatusInfo";
 // import Requests from "./components/RequestPage"; // Commented out Requests import
 import Login from "./Login";
 import Sidebar from "./components/Sidebar"; // Import Sidebar component
+import Navbar from "./components/Navbar"; // Import Navbar component
 import PropTypes from "prop-types";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
 const Layout = ({ user, notifications, showDashboard = true, children }) => {
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [isSidebarFull, setIsSidebarFull] = useState(true);
 
-  const handleLogout = async () => {
-    try {
-      await signOut(getAuth());
-      window.location.reload();
-    } catch (error) {
-      console.error("Error during logout:", error);
-    }
+  const toggleSidebar = () => {
+    setIsSidebarFull((prev) => !prev);
   };
 
   return (
-    <div className="min-h-screen bg-black flex">
-      {/* Sidebar */}
-      <Sidebar /> {/* Use Sidebar component here */}
-
-      <div className="flex-1">
-        {/* Header */}
-        <header className="bg-black p-4 px-6 py-4">
-          <div className="flex justify-end">
-            <div className="relative">
-              <button
-                onClick={() => setShowProfileMenu(!showProfileMenu)}
-                className="flex items-center space-x-3 text-white hover:text-gray-300"
-              >
-                <img
-                  src={user?.photoURL || "/default-profile.png"}
-                  alt={user?.displayName || "User"}
-                  className="w-10 h-10 rounded-full"
-                />
-                <span>{user?.displayName || "Guest"}</span>
-                <ChevronDown size={20} />
-              </button>
-
-              {showProfileMenu && (
-                <div className="absolute right-0 mt-2 w-48 bg-gray-900 rounded-md shadow-lg py-1 z-10">
-                  <a href="/profile" className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">
-                    View Profile
-                  </a>
-                  <button
-                    onClick={handleLogout}
-                    className="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-700"
-                  >
-                    Logout
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        </header>
-
-        {/* Main Content */}
-        <main className="p-8 bg-black min-h-screen">
+    <div className="min-h-screen bg-white">
+      <Navbar user={user} toggleSidebar={toggleSidebar} /> {/* Pass toggleSidebar to Navbar */}
+      <div className="flex">
+        <Sidebar isFull={isSidebarFull} /> {/* Pass isFull to Sidebar */}
+        <main className="flex-1 p-8 bg-white min-h-screen">
           {children || (
             showDashboard ? (
               <>

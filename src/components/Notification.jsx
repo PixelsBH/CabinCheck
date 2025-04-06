@@ -16,29 +16,28 @@ function Notifications({ notifications }) {
         notifications.map((notification, index) => (
           <div
             key={notification.id || index} // Use index as fallback if id is undefined
-            className="bg-gray-900 rounded-lg p-4 flex items-start space-x-4"
-          >
+            className="bg-white rounded-lg p-4 flex border border-gray 300 items-start space-x-4 shadow-md hover:shadow-lg transition-shadow duration-300">
             {notification.type === 'urgent' ? (
               <AlertCircle className="text-red-500" />
             ) : notification.type === 'info' ? (
               <Info className="text-blue-500" />
             ) : (
-              <Info className="text-gray-500" /> // Default icon for unknown types
+              <Info className="text-red-500" /> 
             )}
             <div>
-              <h4 className="font-semibold">{notification.title || 'Untitled'}</h4>
-              <p className="text-gray-400">{notification.message || 'No message provided.'}</p>
-              <span className="text-sm text-gray-500">
+              <h4 className="font-semibold text-black">{notification.title || 'Untitled'}</h4>
+              <p className="text-gray-600">{notification.message || 'No message provided.'}</p>
+              <span className="text-sm text-gray-600">
                 {notification.date
                   ? new Date(notification.date).toLocaleDateString()
                   : 'Unknown date'}
               </span>
-              <p className="text-sm text-gray-400">Posted by {notification.teacher || 'Unknown'}</p> {/* Display teacher */}
+              <p className="text-sm text-gray-800">Posted by {notification.teacher || 'Unknown'}</p> {/* Display teacher */}
             </div>
           </div>
         ))
       ) : (
-        <p className="text-gray-400">No notifications available.</p>
+        <p className="text-gray-600">No notifications available.</p>
       )}
     </div>
   );

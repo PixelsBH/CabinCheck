@@ -1,27 +1,52 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
+import { Link, useLocation } from "react-router-dom";
 import { LayoutDashboard, Activity, Bell } from "lucide-react";
 
-function Sidebar() {
+function Sidebar({ isFull }) {
+  const location = useLocation();
+
+  const isActive = (path) => location.pathname === path;
+
   return (
-    <div className="w-64 bg-black p-4 p-6 flex flex-col">
-      <h1 className="text-white text-2xl font-bold mb-8">Cabin Check</h1>
+    <div
+      className={`bg-white p-4 ${isFull ? "w-72" : "w-20"} min-h-screen border-r border-gray-200 flex flex-col transition-all duration-300`}
+    >
       <nav className="space-y-4">
-        <Link to="/" className="flex items-center space-x-3 text-white hover:text-gray-300 p-2 rounded-lg hover:bg-gray-900">
+        <Link
+          to="/"
+          className={`flex items-center space-x-3 p-2 rounded-lg ${
+            isActive("/") ? "bg-black text-white" : "text-black hover:text-gray-900 hover:bg-gray-100"
+          }`}
+        >
           <LayoutDashboard size={24} />
-          <span>Dashboard</span>
+          {isFull && <span>Dashboard</span>}
         </Link>
-        <Link to="/status" className="flex items-center space-x-3 text-white hover:text-gray-300 p-2 rounded-lg hover:bg-gray-900">
+        <Link
+          to="/status"
+          className={`flex items-center space-x-3 p-2 rounded-lg ${
+            isActive("/status") ? "bg-black text-white" : "text-black hover:text-gray-900 hover:bg-gray-100"
+          }`}
+        >
           <Activity size={24} />
-          <span>Status Info</span>
+          {isFull && <span>Status Info</span>}
         </Link>
-        {/* <Link to="/requests" className="flex items-center space-x-3 text-white hover:text-gray-300 p-2 rounded-lg hover:bg-gray-900">
+        {/* <Link
+          to="/requests"
+          className={`flex items-center space-x-3 p-2 rounded-lg ${
+            isActive("/requests") ? "bg-black text-white" : "text-black hover:text-gray-900 hover:bg-gray-100"
+          }`}
+        >
           <Bell size={24} />
-          <span>Requests</span>
+          {isFull && <span>Requests</span>}
         </Link> */}
       </nav>
     </div>
   );
 }
+
+Sidebar.propTypes = {
+  isFull: PropTypes.bool.isRequired,
+};
 
 export default Sidebar;
