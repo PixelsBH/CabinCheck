@@ -1,14 +1,14 @@
 import Schedule from "../models/Schedule.js";
 
 // Fetch all schedules
-export const getAllSchedules = async (req, res) => {
+/*export const getAllSchedules = async (req, res) => {
   try {
     const schedules = await Schedule.find();
     res.status(200).json(schedules);
   } catch (error) {
     res.status(500).json({ message: "Error fetching schedules", error: error.message });
   }
-};
+};*/
 
 // Fetch a single schedule by teacher email
 export const getScheduleById = async (req, res) => {
@@ -71,19 +71,19 @@ export const addCustomEvent = async (req, res) => {
 // Delete a custom event
 export const deleteCustomEvent = async (req, res) => {
   try {
-    const { teacher, title } = req.body; // Use title instead of eventId
-    const schedule = await Schedule.findOne({ teacher });
+    const { teacher, title } = req.body; // Use title to identify the event
+    const schedule = await Schedule.findOne({ teacher }); // Find schedule by teacher only
 
     if (!schedule) {
-      return res.status(404).json({ message: "Schedule not found for the given teacher" });
+      return res.status(405).json({ message: "Schedule not found for the given teacher" });
     }
 
-    const eventIndex = schedule.schedule.Custom.findIndex(event => event.title === title);
+    const eventIndex = schedule.schedule.Custom.findIndex(event => event.title === title); // Find the event by title
     if (eventIndex === -1) {
       return res.status(404).json({ message: "Custom event not found" });
     }
 
-    schedule.schedule.Custom.splice(eventIndex, 1);
+    schedule.schedule.Custom.splice(eventIndex, 1); // Remove the specific event
     await schedule.save();
 
     res.status(200).json({ message: "Custom event deleted successfully" });

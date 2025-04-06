@@ -7,11 +7,11 @@ function StatusInfo({ user }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [firebaseUser, setFirebaseUser] = useState(null);
   const [teachers, setTeachers] = useState([]); // State for teachers data
-  const [selectedTime, setSelectedTime] = useState("9:00 AM"); // Default time
-  const [showPopup, setShowPopup] = useState({ visible: false, professor: null }); // Popup visibility and professor
+  //const [selectedTime, setSelectedTime] = useState("9:00 AM"); // Default time
+  //const [showPopup, setShowPopup] = useState({ visible: false, professor: null }); // Popup visibility and professor
   const navigate = useNavigate();
 
-  const handleRequestMeeting = (professor) => {
+  /*const handleRequestMeeting = (professor) => {
     setShowPopup({ visible: true, professor }); // Pass the professor to the popup state
   };
 
@@ -67,12 +67,12 @@ function StatusInfo({ user }) {
       console.error('Error sending meeting request:', error);
       alert('Failed to send meeting request.');
     }
-  };
+  };*/
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
       if (!currentUser) {
-        navigate('/'); // Redirect to login page if not logged in
+        navigate('/Login'); // Redirect to login page if not logged in
       } else {
         setFirebaseUser(currentUser);
       }

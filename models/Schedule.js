@@ -15,7 +15,7 @@ const CustomEventSchema = new mongoose.Schema({
   description: { type: String },
 });
 const ScheduleSchema = new mongoose.Schema({
-  teacher: { type: String, required: true }, 
+  teacher: { type: String, required: true }, //teacher's email
   schedule: {
     Monday: [ClassSchema],
     Tuesday: [ClassSchema],

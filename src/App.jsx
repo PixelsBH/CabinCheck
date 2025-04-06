@@ -33,7 +33,7 @@ const Layout = ({ user, notifications, showDashboard = true, children }) => {
                   <Notifications notifications={notifications} />
                 </div>
               </>
-            ) : (
+            ) : (  
               <ProfilePage user={user} />
             )
           )}
