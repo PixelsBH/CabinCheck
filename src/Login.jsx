@@ -111,9 +111,10 @@ function Login({ setUser }) {
   return (
     <div className="flex justify-center items-center min-h-screen bg-white text-black">
       <div className="text-center w-11/12 max-w-md">
-        <div className="bg-black text-white font-bold text-2xl p-5 rounded-xl mb-6">
+        {/* <div className="bg-black text-white font-bold text-2xl p-5 rounded-xl mb-6">
           Cabin Check
-        </div>
+        </div> */}
+        <img src="CClogoW.jpg" alt="Logo" className="w-48 mx-auto mb-4" />
         <p className="text-sm mb-6">
           Cabin Check helps students quickly find professors and check their real-time availability in their cabins, ensuring efficient campus communication.
         </p>

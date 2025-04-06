@@ -21,7 +21,8 @@ function Navbar({ user, toggleSidebar }) {
         <button onClick={toggleSidebar} className="text-black hover:text-gray-600">
           <Menu size={24} />
         </button>
-        <h1 className="text-black text-2xl font-bold">Cabin Check</h1>
+        {/* <h1 className="text-black text-2xl font-bold">Cabin Check</h1> */}
+        <img src="/CClogoW.jpg" alt="Logo" className="w-20" />
       </div>
       <div className="relative">
         <button
