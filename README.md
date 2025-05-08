@@ -5,7 +5,7 @@ Cabin Check helps students quickly find professors and check their real-time ava
 This is a Flutter and React Project with Express.js and Node.js for backend and MongoDB Atlas for database. Currently it is made with the goal of helping students and professors of IIIT Kottayam.
 
 ## Installtion
-# Website(Student)
+### Website(Student)
 
 1. Run `npm install`
 
@@ -13,7 +13,7 @@ This is a Flutter and React Project with Express.js and Node.js for backend and 
 
 3. Run `npm run dev`
 
-# App (Teacher)
+### App (Teacher)
 
 1.
 
