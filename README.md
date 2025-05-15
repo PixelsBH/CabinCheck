@@ -5,15 +5,10 @@ Cabin Check helps students quickly find professors and check their real-time ava
 This is a Flutter and React Project with Express.js and Node.js for backend and MongoDB Atlas for database. Currently it is made with the goal of helping students and professors of IIIT Kottayam.
 
 ## Installtion
-### Website(Student)
 
 1. Run `npm install`
 
 2. Use vscode search function to find local ip (eg. 172.16.203.181) and replace with your own local IPv4
 
 3. Run `npm run dev`
-
-### App (Teacher)
-
-1.
 

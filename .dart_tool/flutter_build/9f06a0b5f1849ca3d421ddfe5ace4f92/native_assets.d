@@ -1,0 +1,1 @@
+ /Users/israel/Downloads/ISRAEL/Pc/flutter_stuff/cabin_check/.dart_tool/flutter_build/9f06a0b5f1849ca3d421ddfe5ace4f92/native_assets.yaml: 
