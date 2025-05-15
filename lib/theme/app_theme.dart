@@ -7,7 +7,23 @@ class AppTheme {
   static const backgroundColor = Color(0xFFFAFAFA);
   static const cardColor = Color(0xFFFFFFFF);
   static const accentColor = Color(0xFF007AFF);
-  
+  static const smtg = Color.fromRGBO(231, 230, 231, 1.0);
+  static const white2 = Color.fromRGBO(232, 232, 237, 1.0);
+  static const white3 = Color.fromRGBO(231, 230, 231, 1.0); // newly added color
+  static const gray1 = Color.fromRGBO(205, 205, 205, 1.0);
+  static const gray2 = Color.fromRGBO(185, 185, 185, 1.0);
+  static const white0 = Color.fromRGBO(255, 255, 255, 1.0);
+  static const white1 = Color.fromRGBO(245, 245, 245, 1.0);
+  static const gray3 = Color.fromRGBO(145, 145, 145, 1.0);
+  static const black1 = Color.fromRGBO(68, 68, 69, 1.0);
+  static const black2 = Color.fromRGBO(22, 22, 23, 1.0);
+  static const black3 = Color.fromRGBO(30, 30, 30, 1.0);
+  static const black0 = Color.fromRGBO(0, 0, 0, 1.0);
+  static const fire_red = Color.fromRGBO(230, 57, 70, 1.0);
+  static const tree_green = Color.fromRGBO(50, 187, 120, 1.0);
+  static const gray44 = Color.fromRGBO(132, 141, 151, 1.0);
+  static const selected_red = Color(0xFFFFF5F5);
+
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,

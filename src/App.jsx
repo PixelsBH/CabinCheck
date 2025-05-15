@@ -71,7 +71,7 @@ function App() {
 
     const fetchNotifications = async () => {
       try {
-        const response = await fetch("http://172.16.203.181:5000/routes/notifications"); // Replace with your IPv4 address
+        const response = await fetch("http://192.168.29.125:5000/routes/notifications"); // Replace with your IPv4 address
         const data = await response.json();
         if (isMounted) {
           setNotifications(data); // Ensure teacher field is part of the fetched data

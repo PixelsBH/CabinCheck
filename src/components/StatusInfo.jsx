@@ -41,7 +41,7 @@ function StatusInfo({ user }) {
       currentDate.setUTCHours(startHour, parseInt(minute), 0, 0); // Set hours and minutes in UTC
       console.log("Selected time (UTC):", currentDate.toISOString()); // Debugging log
 
-      const response = await fetch('http://172.16.203.181:5000/routes/meetings', { // Updated URL to match backend
+      const response = await fetch('http://192.168.29.125:5000/routes/meetings', { // Updated URL to match backend
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -85,7 +85,7 @@ function StatusInfo({ user }) {
 
     const fetchTeachers = async () => {
       try {
-        const response = await fetch("http://172.16.203.181:5000/routes/teachers"); // Replace with your IPv4 address
+        const response = await fetch("http://192.168.29.125:5000/routes/teachers"); // Replace with your IPv4 address
         const data = await response.json();
         if (isMounted) {
           setTeachers(data); // Update state only if the component is still mounted

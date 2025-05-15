@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "179904000591",
+    "project_id": "login-8cb26",
+    "storage_bucket": "login-8cb26.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:179904000591:android:8bd4247cc0eb31aeed303a",
+        "android_client_info": {
+          "package_name": "com.example.cabin_check"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "179904000591-a0ocbb85biuml8r7pebnqhph1baia6j1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9zJSY_QqiQDpdcj-xBRBQKbBJNqKgH0A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "179904000591-a0ocbb85biuml8r7pebnqhph1baia6j1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

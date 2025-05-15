@@ -8,7 +8,7 @@ export default defineConfig({
     open: true,
     host: true, // Allow access from the local network
     proxy: {
-      "/routes": "http://172.16.203.181:5000", // Replace with your IPv4 address
+      "/routes": "http://192.168.29.125:5000", // Replace with your IPv4 address
     },
   },
   resolve: {

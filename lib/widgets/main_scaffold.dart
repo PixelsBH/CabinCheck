@@ -1,3 +1,4 @@
+import 'package:cabin_check/screens/addnotes.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -6,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:cabin_check/screens/home_screen.dart';
 import 'package:cabin_check/screens/schedule_screen.dart';
-import 'package:cabin_check/screens/chat_screen.dart';
+
 import 'package:cabin_check/screens/profile_screen.dart';
 
 import '../main.dart';
@@ -24,7 +25,7 @@ class MainScaffold extends ConsumerWidget {
         children: const [
           HomeScreen(),
           ScheduleScreen(),
-          ChatScreen(),
+          NotePage(),
           ProfileScreen(),
         ],
       ),
