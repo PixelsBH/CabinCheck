@@ -14,6 +14,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "179904000591-fajptifv51m8blmg9t9bojcrmpmnp54q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.cabin_check",
+            "certificate_hash": "fd583d10143c57718813e9d73de1a435d3add072"
+          }
+        },
+        {
+          "client_id": "179904000591-s055pjin0rdq9e3ffn5n21lst6l5p0hd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.cabin_check",
+            "certificate_hash": "d5d39e0420168dc6bf2c64b2391085427399fb4a"
+          }
+        },
+        {
           "client_id": "179904000591-a0ocbb85biuml8r7pebnqhph1baia6j1.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,6 +45,13 @@
             {
               "client_id": "179904000591-a0ocbb85biuml8r7pebnqhph1baia6j1.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "179904000591-e4mjul25smqa9t90ip3fllmjnddm3cst.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.cabinCheck"
+              }
             }
           ]
         }
