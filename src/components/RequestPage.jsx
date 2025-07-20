@@ -7,7 +7,7 @@ function Requests({ user }) {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const response = await fetch(`http://192.168.29.125:5000/routes/meetings/${user.username}`); // Replace with your IPv4 address
+        const response = await fetch(`http://192.168.29.125:5000/routes/meetings/student/${user.username}`);
         if (!response.ok) {
           throw new Error("Failed to fetch Requests");
         }
@@ -24,16 +24,16 @@ function Requests({ user }) {
     fetchRequests();
 
     // Set up polling every 3 seconds
-    const interval = setInterval(fetchRequests, 3000);
+    const interval = setInterval(fetchRequests, 4000);
 
     // Cleanup interval on component unmount
     return () => clearInterval(interval);
   }, [user.username]);
 
   const handleClick = async (teacherName, username) => {
-    console.log("Frontend - Deleting request for teacher:", teacherName, "and student:", username); // Log the parameters
+    console.log("Deleting request for teacher:", teacherName, "and student:", username); // Log the parameters
     try {
-      const response = await fetch(`http://192.168.29.125:5000/routes/meetings/${teacherName}/${username}`, { // Replace with your IPv4 address
+      const response = await fetch(`http://192.168.29.125:5000/routes/meetings/${teacherName}/${username}`, { 
         method: "DELETE",
       });
       if (!response.ok) {
@@ -48,18 +48,6 @@ function Requests({ user }) {
     }
   };
 
-  function formatTimeSlot(startTime, endTime) {
-    const formatTime = (time) => {
-      const date = new Date(time);
-      return date.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true,
-        timeZone: 'UTC' // Ensure the time is displayed in UTC
-      });
-    };
-    return `${formatTime(startTime)} - ${formatTime(endTime)}`;
-  }
 
   if (loading) {
     return <div className="text-white">Loading Requests...</div>;
@@ -75,21 +63,21 @@ function Requests({ user }) {
     }, {})
   );
 
-  // Sort the latest requests in descending order based on the date
-  latestRequests.sort((a, b) => new Date(b.date) - new Date(a.date));
+  // Sort the latest requests in descending order based on the createdAt timestamp
+  latestRequests.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   return (
-    <div className="min-h-screen bg-black p-8">
-      <h1 className="text-2xl font-bold text-white mb-6">Requests</h1>
+    <div >
+      <h1 className="text-2xl font-bold text-black dark:text-white mb-6">Requests</h1>
       {latestRequests.length === 0 ? (
-        <p className="text-gray-400">No Requests available.</p>
+        <p className="text-gray-700">No Requests available.</p>
       ) : (
         <ul className="space-y-4">
           {latestRequests.map((request) => (
-            <li key={request._id} className="bg-gray-900 p-4 rounded-lg text-white">
+            <li key={request._id} className="bg-gray-200 dark:bg-gray-900 p-4 rounded-lg text-black dark:text-white border border-gray-300 dark:border-gray-800 shadow-md">
               <p><strong>Teacher:</strong> {request.teacher}</p>
-              <p><strong>Date:</strong> {new Date(request.date).toLocaleString()}</p>
-              <p><strong>Time Slot:</strong> {formatTimeSlot(request.meetTime, request.endTime)} {/* Pass both start and end times */}</p>
+              <p><strong>Date:</strong> {new Date(request.createdAt).toLocaleString()}</p>
+              <p><strong>Purpose:</strong>{request.purpose}</p>
               <p><strong>Status:</strong> {request.status}</p>
               <button
                 onClick={() => handleClick(request.teacher, user.username)}

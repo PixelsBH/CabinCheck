@@ -4,7 +4,7 @@ const TeacherSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   status: { type: Boolean, required: true },
-  subjects: [{ type: String }],
+  note: { type: String, default: "" },
   office: { type: String, required: false },
   image: { type: String },
   firebaseUID: { type: String },

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { extractRollNo } from "../../utils/rollNoUtils"; // Import the utility function
+import { extractRollNo } from "../../utils/rollNoUtils"; 
 
 // Helper function to determine department based on email
 const getDepartment = (email) => {
@@ -9,7 +9,7 @@ const getDepartment = (email) => {
 
   if (!match) return "Unknown Department";
 
-  const program = match[3].toLowerCase(); // Extract program code
+  const program = match[3].toLowerCase(); 
 
   switch (program) {
     case "bcs":
@@ -27,29 +27,29 @@ const getDepartment = (email) => {
 
 function ProfilePage({ user }) {
   return (
-    <div className="absolute top-0 left-64 right-0 min-h-screen bg-white p-4 p-8 ">
-      <div className="max-w-2xl mx-auto bg-white rounded-lg p-8 border border-gray-300 shadow-md rounded-lg">
+    <div className="min-h-screen bg-white dark:bg-black sm:p-8">
+      <div className="max-w-2xl mx-auto bg-white dark:bg-black rounded-lg p-8 border border-gray-200 dark:border-gray-800 shadow-md">
         <div className="flex flex-col items-center space-y-4">
           <img
-            src={user?.photoURL || "/default-profile.png"} // Use fallback image
+            src={user?.photoURL || "/default-profile.png"}
             alt={user?.displayName || "User"}
             className="w-32 h-32 rounded-full"
           />
-          <h1 className="text-3xl font-bold text-black">{user?.displayName || "Guest"}</h1>
+          <h1 className="text-3xl font-bold text-black dark:text-white">{user?.displayName || "Guest"}</h1>
           <div className="w-full mt-8">
-            <h2 className="text-xl font-semibold mb-4 text-black">Profile Information</h2>
+            <h2 className="text-xl font-semibold mb-4 text-black dark:text-white">Profile Information</h2>
             <div className="space-y-4">
-              <div className="bg-gray-100 p-4 rounded-lg">
-                <h3 className="text-sm text-black">Email</h3>
-                <p className="text-black">{user?.email || "No email available"}</p>
+              <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
+                <h3 className="text-sm text-black dark:text-gray-200">Email</h3>
+                <p className="text-black dark:text-white">{user?.email || "No email available"}</p>
               </div>
-              <div className="bg-gray-100 p-4 rounded-lg">
-                <h3 className="text-sm text-black">Roll No.</h3>
-                <p className="text-black">{user?.email ? extractRollNo(user.email) : "No roll number available"}</p>
+              <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
+                <h3 className="text-sm text-black dark:text-gray-200">Roll No.</h3>
+                <p className="text-black dark:text-white">{user?.email ? extractRollNo(user.email) : "No roll number available"}</p>
               </div>
-              <div className="bg-gray-100 p-4 rounded-lg">
-                <h3 className="text-sm text-black">Department</h3>
-                <p className="text-black">{user?.email ? getDepartment(user.email) : "No department available"}</p>
+              <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
+                <h3 className="text-sm text-black dark:text-gray-200">Department</h3>
+                <p className="text-black dark:text-white">{user?.email ? getDepartment(user.email) : "No department available"}</p>
               </div>
             </div>
           </div>

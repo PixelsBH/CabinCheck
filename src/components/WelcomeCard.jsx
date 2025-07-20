@@ -1,17 +1,16 @@
-import React from "react";
 import PropTypes from "prop-types";
 
-const WelcomeCard = ({ firstName }) => {
+const WelcomeCard = ({ name }) => {
   return (
-    <div className="bg-white text-black p-6 rounded-lg shadow-md border border-gray-200">
-      <p className="text-sm text-gray-600">{new Date().toLocaleDateString()}</p>
-      <h1 className="text-2xl font-bold mt-2">Welcome back, {firstName || "Guest"}!</h1> {/* Display first name */}
+    <div className="bg-white dark:bg-black text-black dark:text-white p-6 rounded-lg shadow-md border border-gray-100 dark:border-gray-800">
+      <p className="text-sm text-gray-700 dark:text-gray-200">{new Date().toLocaleDateString()}</p>
+      <h1 className="text-2xl font-bold mt-2">Welcome back, { name || "Guest"}!</h1> 
     </div>
   );
 };
 
 WelcomeCard.propTypes = {
-  firstName: PropTypes.string, // Accept firstName as a prop
+  name: PropTypes.string,
 };
 
 export default WelcomeCard;

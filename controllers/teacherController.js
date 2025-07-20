@@ -62,10 +62,10 @@ export const getTeacherById = async (req, res) => {
 // Update a teacher
 export const updateTeacher = async (req, res) => {
   try {
-    const { name, email, status, office, image, firebaseUID, subjects } = req.body; // Added firebaseUID and subjects
+    const { name, email, status, office, image, firebaseUID, note } = req.body;
     const updatedTeacher = await Teacher.findByIdAndUpdate(
       req.params.id,
-      { name, email, status, office, image, firebaseUID, subjects },
+      { name, email, status, office, image, firebaseUID, note },
       { new: true }
     );
     if (!updatedTeacher) {

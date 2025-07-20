@@ -1,11 +1,24 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink, Navigate } from "react-router-dom";
 import { auth, provider } from "../config/firebase";
-import { signInWithPopup, signOut } from "firebase/auth";
+import { signInWithPopup, signInWithRedirect, signOut } from "firebase/auth"; // Import signInWithRedirect
 import { extractRollNo } from "../utils/rollNoUtils"; // Import extractRollNo
 
-function Login({ setUser }) {
+function Login({ setUser, user }) { // Accept user as prop
   const navigate = useNavigate();
+  const [loggingIn, setLoggingIn] = React.useState(false); // Add loading state
+
+  // Redirect if already logged in
+  if (user) {
+    return <Navigate to="/" replace />;
+  }
+
+  // Add this effect to reset loggingIn if user is authenticated and Login is still rendered
+  React.useEffect(() => {
+    // If the user is authenticated, this component should not be rendered,
+    // but in case it is, reset loggingIn to false
+    setLoggingIn(false);
+  }, []);
 
   const isValidCabinCheckEmail = (email) => {
     const regex = /^([a-zA-Z]+)(\d{2})(bcs|bec|bcy|bcd)(\d{1,3})@iiitkottayam\.ac\.in$/;
@@ -32,6 +45,7 @@ function Login({ setUser }) {
 
   const handleGoogleLogin = async () => {
     try {
+      setLoggingIn(true);
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
       const email = user.email;
@@ -68,15 +82,7 @@ function Login({ setUser }) {
         rollNo: rollNo,
         photoURL: user.photoURL,
       };
-
-      if (typeof setUser === "function") {
-        setUser(userData);
-      } else {
-        console.warn("setUser is not a function. User data will not be stored.");
-      }
-
-      // Send user data to the backend to store in MongoDB
-      await fetch("http://192.168.29.125:5000/routes/students", { // Replace with your IPv4 address
+      await fetch("http://192.168.29.125:5000/routes/students", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -90,11 +96,12 @@ function Login({ setUser }) {
       });
 
       console.log("Google login successful. Redirecting...");
-      navigate("/"); // Redirect to dashboard after successful login
+      window.location.replace("/"); // Force reload and go to Dashboard
 
     } catch (error) {
       console.error("Error during login:", error);
       alert("Login failed. Please try again.");
+      setLoggingIn(false); // Stop loading on error
     }
   };
 
@@ -111,20 +118,23 @@ function Login({ setUser }) {
   return (
     <div className="flex justify-center items-center min-h-screen bg-white text-black">
       <div className="text-center w-11/12 max-w-md">
-        {/* <div className="bg-black text-white font-bold text-2xl p-5 rounded-xl mb-6">
-          Cabin Check
-        </div> */}
-        <img src="CClogoW.jpg" alt="Logo" className="w-48 mx-auto mb-4" />
+        <NavLink to="/">
+          <img src="CClogoW.jpg" alt="Logo" className="w-48 mx-auto mb-4" />
+        </NavLink>
         <p className="text-sm mb-6">
           Cabin Check helps students quickly find professors and check their real-time availability in their cabins, ensuring efficient campus communication.
         </p>
         <button
           onClick={handleGoogleLogin}
           className="flex items-center justify-center bg-neutral-800 text-white px-4 py-2 rounded-lg hover:bg-neutral-700 transition"
+          disabled={loggingIn}
         >
           <img src="google_icon.png" alt="Google Logo" className="w-5 mr-2" />
-          Continue with Google
+          {loggingIn ? "Signing in..." : "Continue with Google"}
         </button>
+        {loggingIn && (
+          <div className="mt-4 text-gray-500">Signing in, please wait...</div>
+        )}
       </div>
     </div>
   );

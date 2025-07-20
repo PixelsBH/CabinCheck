@@ -3,7 +3,6 @@ import {
   getAllMeetings,
   createMeeting,
   getMeetingsByTeacherEmail,
-  updateMeeting,
   deleteMeeting,
   patchMeetingStatus,
 } from "../controllers/meetingController.js";
@@ -11,10 +10,9 @@ import {
 const router = express.Router();
 
 // Routes
-router.get("/:name", getAllMeetings); // Fetch all meetings
+router.get("/student/:name", getAllMeetings); // Fetch all meetings by student name
 router.post("/", createMeeting); // Create a new meeting
-router.get("/:email", getMeetingsByTeacherEmail); // Fetch meetings by teacher email
-router.put("/:id", updateMeeting); // Update a meeting
+router.get("/teacher/:email", getMeetingsByTeacherEmail); // Fetch meetings by teacher email
 router.delete("/:teacher/:username", deleteMeeting); // Delete meetings by teacher and student
 router.patch("/:id/status", patchMeetingStatus); // Update meeting status (approve/reject)
 

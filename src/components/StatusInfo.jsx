@@ -6,69 +6,54 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate
 function StatusInfo({ user }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [firebaseUser, setFirebaseUser] = useState(null);
-  const [teachers, setTeachers] = useState([]); // State for teachers data
-  //const [selectedTime, setSelectedTime] = useState("9:00 AM"); // Default time
-  //const [showPopup, setShowPopup] = useState({ visible: false, professor: null }); // Popup visibility and professor
-  const navigate = useNavigate();
-
-  /*const handleRequestMeeting = (professor) => {
-    setShowPopup({ visible: true, professor }); // Pass the professor to the popup state
+  const [teachers, setTeachers] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
+  const [meetingPurpose, setMeetingPurpose] = useState('');
+  
+  const openPopup = (teacher) => {
+    setSelectedTeacher(teacher);
+    setMeetingPurpose('');
+    setShowPopup(true);
   };
 
-  const handleConfirmMeeting = async () => {
-    setShowPopup({ visible: false, professor: null }); // Hide the popup
+  const closePopup = () => {
+    setShowPopup(false);
+    setSelectedTeacher(null);
+    setMeetingPurpose('');
+  };
+
+  const handleSendRequest = async () => {
+    if (selectedTeacher) {
+      await requestMeeting(selectedTeacher._id, selectedTeacher.name, selectedTeacher.email, meetingPurpose);
+      closePopup();
+    }
+  };
+  
+  const navigate = useNavigate();
+
+  const requestMeeting = async (teacherId, teacherName, teacherEmail, purpose = "Requesting a meeting") => {
     try {
-      if (!selectedTime) {
-        console.error("Selected time is null or undefined");
-        alert("Please select a valid meeting time.");
-        return;
-      }
-
-      const currentDate = new Date(); // Get the current date
-      const match = selectedTime.match(/(\d+):(\d+)\s(AM|PM)/); // Validate selectedTime format
-      if (!match) {
-        console.error("Invalid time format:", selectedTime);
-        alert("Invalid time format. Please select a valid time.");
-        return;
-      }
-
-      const [_, hour, minute, period] = match; // Extract hour, minute, and period
-      let startHour = parseInt(hour);
-      if (period === "PM" && startHour !== 12) startHour += 12; // Convert PM to 24-hour format
-      if (period === "AM" && startHour === 12) startHour = 0; // Handle midnight
-
-      // Set the time directly in UTC
-      currentDate.setUTCHours(startHour, parseInt(minute), 0, 0); // Set hours and minutes in UTC
-      console.log("Selected time (UTC):", currentDate.toISOString()); // Debugging log
-
-      const response = await fetch('http://192.168.29.125:5000/routes/meetings', { // Updated URL to match backend
-        method: 'POST',
+      const response = await fetch("http://192.168.29.125:5000/routes/meetings", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          teacher: showPopup.professor, // Use the professor from the popup state
-          student: user.username, // Student's username
-          date: new Date().toISOString(), // Use the current date in UTC
-          status: 'Pending',
-          meetTime: currentDate.toISOString(), // Send meetTime as ISO string
+          teacher: teacherEmail,
+          student: user.username,
+          purpose: purpose
         }),
       });
-
       if (!response.ok) {
-        const text = await response.text(); // Read raw response text
-        console.error("Server Error:", text); // Log raw response
-        throw new Error('Failed to send meeting request');
+        throw new Error(`Failed to create request: ${response.statusText}`);
       }
-
       const data = await response.json();
-      console.log('Meeting request sent:', data);
+      console.log("Meeting request created successfully:", data);
     } catch (error) {
-      console.error('Error sending meeting request:', error);
-      alert('Failed to send meeting request.');
+      console.error("Error requesting meeting:", error);
     }
-  };*/
-
+  };
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
       if (!currentUser) {
@@ -85,7 +70,7 @@ function StatusInfo({ user }) {
 
     const fetchTeachers = async () => {
       try {
-        const response = await fetch("http://192.168.29.125:5000/routes/teachers"); // Replace with your IPv4 address
+        const response = await fetch("http://192.168.29.125:5000/routes/teachers");
         const data = await response.json();
         if (isMounted) {
           setTeachers(data); // Update state only if the component is still mounted
@@ -107,41 +92,26 @@ function StatusInfo({ user }) {
   }, []);
 
   const filteredTeachers = teachers.filter(teacher =>
-    teacher.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    teacher.subjects.some(subject => subject.toLowerCase().includes(searchTerm.toLowerCase()))
+    teacher.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div className="min-h-screen bg-white p-8">
-      {/* Header */}
-      <header className="flex justify-between items-center mb-8 bg-white p-4 rounded-lg border border-gray-300 shadow-md "> {}
-        <div className="flex items-center space-x-3 text-white bg-white p-4 rounded-lg"> {}
-          <img
-            src={firebaseUser?.photoURL || "/default-profile.png"} 
-            alt={firebaseUser?.displayName || "User"}
-            className="w-10 h-10 rounded-full"
-          />
-          <div className="flex flex-col">
-            <span className="font-semibold text-black">{firebaseUser?.displayName || 'Guest'}</span>
-            <span className="text-sm text-gray-600">{firebaseUser?.email || 'No email available'}</span>
-          </div>
-        </div>
-        <div className="relative white p-2 rounded-lg"> {}
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600 border " size={20} />
+    <div className="min-h-screen bg-white dark:bg-black p-2 sm:p-6">
+      <div className="relative flex items-center space-x-3 mb-6  p-1 rounded-lg"> {}
+          <Search className="text-black dark:text-white " size={20} />
           <input
             type="text"
             placeholder="   Search teachers..."
-            className="w-72 bg-gray-100 text-gray-700 px-5 py-3 rounded-full border-0 focus:outline-none focus:ring-2 focus:ring-black transition-all placeholder-gray-400 shadow -md hover:shadow-lg transition-shadow duration-300" 
+            className="w-72 bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-5 py-3 rounded-full border-0 focus:outline-none focus:ring-2 focus:ring-black transition-all placeholder-gray-400 shadow -md hover:shadow-lg duration-300" 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-      </header>
 
       {/* Teachers List */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="flex flex-col gap-6 md:grid md:grid-cols-2 lg:grid-cols-3">
         {filteredTeachers.map(teacher => (
-          <div key={teacher._id} className="bg-gray-30 rounded-lg p-6 space-y-4 border border-gray-300 shadow-md hover:shadow-lg transition-shadow duration-300"> 
+          <div key={teacher._id} className="rounded-lg p-4 sm:p-6 space-y-4 border border-gray-200 dark:border-gray-800 shadow-md hover:shadow-lg transition-shadow duration-300"> 
             <div className="flex items-center space-x-4">
               <img
                 src={teacher.image}
@@ -149,13 +119,18 @@ function StatusInfo({ user }) {
                 className="w-16 h-16 rounded-full"
               />
               <div>
-                <h3 className="text-lg font-semibold text-black">{teacher.name}</h3>
-                <p className="text-gray-600 text-sm">{teacher.email}</p> {/* Display email */}
-                <p className="text-gray-600">{teacher.subjects.join(", ")}</p>
+                <h3 className="text-lg font-semibold text-black dark:text-white">{teacher.name}</h3>
+                <p className="text-gray-700 dark:text-gray-400 text-sm">{teacher.email}</p>
+                <p className="text-gray-700 dark:text-gray-400">Note: {teacher.note}</p>
               </div>
             </div>
-            <div className="flex justify-between items-center pt-4 border-t border-gray-700">
-              <span className="text-sm font-medium bg-gray-200 px-4 py-1.5 rounded-full text-gray-700">{teacher.office}</span>
+            <div className="flex flex-wrap gap-2 justify-between items-center pt-4 border-t border-gray-800 dark:border-gray-200">
+              <span className="text-sm font-medium bg-gray-300 dark:bg-gray-700 px-4 py-1.5 rounded-full text-gray-800 dark:text-gray-200">
+                {teacher.office}</span>
+              <button className ="px-4 py-1.5 text-sm font-medium bg-sky-300 text-blue-700 rounded-full hover:bg-sky-500 transition-colors duration-300"
+                onClick={(() => openPopup(teacher))}>
+                  Request
+              </button>
               <div className={`px-4 py-1.5 rounded-full text-sm font-medium ${
                 teacher.status 
                   ? 'bg-green-100 text-green-700' 
@@ -167,6 +142,37 @@ function StatusInfo({ user }) {
           </div>
         ))}
       </div>
+      {/* Purpose Popup */}
+      {showPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+          <div className="bg-white dark:bg-black rounded-lg p-4 w-full max-w-md shadow-lg border border-gray-200 dark:border-gray-800">
+            <h2 className="text-lg font-semibold mb-4 text-black dark:text-white">Request Meeting with {selectedTeacher?.name}</h2>
+            <textarea
+              className="w-full border border-gray-300 dark:border-gray-700 rounded-lg p-2 mb-4 text-black bg-white dark:bg-gray-800 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              rows={3}
+              placeholder="Enter purpose for meeting..."
+              value={meetingPurpose}
+              onChange={(e) => setMeetingPurpose(e.target.value)}
+            />
+            <div className="flex justify-end space-x-2">
+              <button
+                className="px-4 py-2 bg-gray-400 rounded hover:bg-gray-300"
+                onClick={closePopup}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 bg-sky-400 text-blue-700 rounded hover:bg-sky-500"
+                onClick={handleSendRequest}
+                disabled={!meetingPurpose.trim()}
+              >
+                Send
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
