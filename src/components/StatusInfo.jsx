@@ -34,7 +34,7 @@ function StatusInfo({ user }) {
 
   const requestMeeting = async (teacherId, teacherName, teacherEmail, purpose = "Requesting a meeting") => {
     try {
-      const response = await fetch("http://192.168.29.125:5000/routes/meetings", {
+      const response = await fetch("http://172.16.204.118:5000/routes/meetings", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -70,7 +70,7 @@ function StatusInfo({ user }) {
 
     const fetchTeachers = async () => {
       try {
-        const response = await fetch("http://192.168.29.125:5000/routes/teachers");
+        const response = await fetch("http://172.16.204.118:5000/routes/teachers");
         const data = await response.json();
         if (isMounted) {
           setTeachers(data); // Update state only if the component is still mounted
@@ -102,7 +102,7 @@ function StatusInfo({ user }) {
           <input
             type="text"
             placeholder="   Search teachers..."
-            className="w-72 bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-5 py-3 rounded-full border-0 focus:outline-none focus:ring-2 focus:ring-black transition-all placeholder-gray-400 shadow -md hover:shadow-lg duration-300" 
+            className="w-72 bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-5 py-3 rounded-full border-0 focus:outline-none focus:ring-2 focus:ring-black placeholder-gray-400 shadow -md hover:shadow-lg" 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />

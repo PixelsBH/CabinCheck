@@ -8,6 +8,7 @@ import Requests from "./components/RequestPage";
 import Login from "./Login";
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
+import NotFound from "./components/NotFound";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { extractRollNo } from "../utils/rollNoUtils";
 
@@ -40,7 +41,7 @@ function App() {
 
     const fetchNotifications = async () => {
       try {
-        const response = await fetch("http://192.168.29.125:5000/routes/notifications");
+        const response = await fetch("http://172.16.204.118:5000/routes/notifications");
         const data = await response.json();
         if (isMounted) setNotifications(data);
       } catch (error) {
@@ -127,7 +128,12 @@ function App() {
               path="/requests"
               element={user ? <Requests user={user} /> : <Navigate to="/login" replace />}
             />
-            <Route path="/login" element={<Login setUser={setUser} user={user} />} />
+            <Route path="/login" element={<Login setUser={setUser} user={user} />} 
+            />
+            <Route
+              path="*"
+              element={<NotFound />}  
+            />
           </Routes>
         </main>
       </div>

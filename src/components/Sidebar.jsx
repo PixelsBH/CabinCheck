@@ -17,7 +17,7 @@ function Sidebar({ isFull, isMobileOpen, onClose }) {
         to={to}
         onClick={onClose}
         className={({ isActive }) =>
-          `flex items-center space-x-3 p-2 rounded-lg transition-colors ${
+          `flex items-center space-x-3 p-2 rounded-lg ${
             isActive
               ? "bg-black text-white dark:bg-white dark:text-black"
               : "text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-900"
@@ -35,7 +35,7 @@ function Sidebar({ isFull, isMobileOpen, onClose }) {
       <div
         className={`hidden sm:flex bg-white dark:bg-black p-2 sm:p-4 ${
           isFull ? "w-72" : "w-20"
-        } min-h-screen border-r border-gray-200 dark:border-gray-700 flex-col transition-all duration-300`}
+        } min-h-screen border-r border-gray-200 dark:border-gray-700 flex-col transition-[width] duration-300`}
       >
         <nav className="space-y-4">{renderLinks()}</nav>
       </div>

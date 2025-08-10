@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef} from "react";
 import PropTypes from "prop-types";
 import { ChevronDown, Menu, Moon, Sun } from "lucide-react";
 import { signOut, getAuth } from "firebase/auth";
@@ -6,6 +6,7 @@ import { NavLink } from "react-router-dom";
 
 function Navbar({ user, toggleSidebar, toggleDark, isDark, toggleMobileSidebar }) {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const profileMenuRef = useRef(null);
 
   const handleLogout = async () => {
     try {
@@ -15,6 +16,23 @@ function Navbar({ user, toggleSidebar, toggleDark, isDark, toggleMobileSidebar }
       console.error("Error during logout:", error);
     }
   };
+
+  // Close on outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        profileMenuRef.current &&
+        !profileMenuRef.current.contains(event.target)
+      ) {
+        setShowProfileMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <header className="bg-white dark:bg-black p-2 sm:p-4 border-b border-gray-200 dark:border-gray-800 flex justify-between items-center">
@@ -45,7 +63,7 @@ function Navbar({ user, toggleSidebar, toggleDark, isDark, toggleMobileSidebar }
       </div>
 
       {/* Right side with dark mode toggle and profile */}
-      <div className="flex items-center space-x-4 sm:space-x-6 relative">
+      <div className="flex items-center space-x-4 sm:space-x-6 relative" ref={profileMenuRef}>
         {/* Dark Mode Toggle Icon */}
         <button
           onClick={toggleDark}

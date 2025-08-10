@@ -24,6 +24,6 @@ dist-ssr
 *.sw?
 
 #Flutter
-build/
+flutter-app/build/
 *.apk
 .dart_tool

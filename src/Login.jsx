@@ -82,7 +82,7 @@ function Login({ setUser, user }) { // Accept user as prop
         rollNo: rollNo,
         photoURL: user.photoURL,
       };
-      await fetch("http://192.168.29.125:5000/routes/students", {
+      await fetch("http://172.16.204.118:5000/routes/students", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

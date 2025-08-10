@@ -7,7 +7,7 @@ function Requests({ user }) {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const response = await fetch(`http://192.168.29.125:5000/routes/meetings/student/${user.username}`);
+        const response = await fetch(`http://172.16.204.118:5000/routes/meetings/student/${user.username}`);
         if (!response.ok) {
           throw new Error("Failed to fetch Requests");
         }
@@ -33,7 +33,7 @@ function Requests({ user }) {
   const handleClick = async (teacherName, username) => {
     console.log("Deleting request for teacher:", teacherName, "and student:", username); // Log the parameters
     try {
-      const response = await fetch(`http://192.168.29.125:5000/routes/meetings/${teacherName}/${username}`, { 
+      const response = await fetch(`http://172.16.204.118:5000/routes/meetings/${teacherName}/${username}`, { 
         method: "DELETE",
       });
       if (!response.ok) {
