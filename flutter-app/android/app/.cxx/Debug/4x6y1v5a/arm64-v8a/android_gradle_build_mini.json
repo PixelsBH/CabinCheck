@@ -6,14 +6,14 @@
     [
       "C:\\Android\\cmake\\3.22.1\\bin\\ninja.exe",
       "-C",
-      "D:\\CabinCheck\\android\\app\\.cxx\\Debug\\4x6y1v5a\\arm64-v8a",
+      "D:\\CabinCheck\\flutter-app\\android\\app\\.cxx\\Debug\\4x6y1v5a\\arm64-v8a",
       "clean"
     ]
   ],
   "buildTargetsCommandComponents": [
     "C:\\Android\\cmake\\3.22.1\\bin\\ninja.exe",
     "-C",
-    "D:\\CabinCheck\\android\\app\\.cxx\\Debug\\4x6y1v5a\\arm64-v8a",
+    "D:\\CabinCheck\\flutter-app\\android\\app\\.cxx\\Debug\\4x6y1v5a\\arm64-v8a",
     "{LIST_OF_TARGETS_TO_BUILD}"
   ],
   "libraries": {}

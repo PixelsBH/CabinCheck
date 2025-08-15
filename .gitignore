@@ -7,10 +7,12 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+#Others
 node_modules
 dist
 dist-ssr
 *.local
+.env
 
 # Editor directories and files
 .vscode/*
@@ -27,3 +29,4 @@ dist-ssr
 flutter-app/build/
 *.apk
 .dart_tool
+

@@ -1,10 +1,11 @@
 import React from "react";
 import { useNavigate, NavLink, Navigate } from "react-router-dom";
 import { auth, provider } from "../config/firebase";
-import { signInWithPopup, signInWithRedirect, signOut } from "firebase/auth"; // Import signInWithRedirect
-import { extractRollNo } from "../utils/rollNoUtils"; // Import extractRollNo
+import { signInWithPopup, signOut } from "firebase/auth";
+import { extractRollNo } from "../utils/rollNoUtils";
+import { getDepartment } from "../utils/getDepartmentUtils";
 
-function Login({ setUser, user }) { // Accept user as prop
+function Login({ setUser, user, isDark }) { // Accept user as prop
   const navigate = useNavigate();
   const [loggingIn, setLoggingIn] = React.useState(false); // Add loading state
 
@@ -27,14 +28,11 @@ function Login({ setUser, user }) { // Accept user as prop
     if (!match) return false;
 
     let username = match[1]; // Extracted username
-    let year = parseInt(match[2]); // Admission Year (21, 22, 23, 24)
+    let year = parseInt(match[2]); // Admission Year 
     let program = match[3]; // Program Code (bcs, bec, bcy, bcd)
     let number = parseInt(match[4]); // Unique student number
 
     if (!username) return false; // Ensure username exists
-
-    // Ensure year is between 21 and 24 (valid B.Tech batches)
-    if (![21, 22, 23, 24].includes(year)) return false;
 
     // Check number ranges based on the program
     if (program === "bcs" && (number < 0 || number > 240)) return false;
@@ -72,6 +70,12 @@ function Login({ setUser, user }) { // Accept user as prop
         await signOut(auth);
         return;
       }
+      const department = getDepartment(email);
+      if (department === "Unknown Department") {
+        alert("Invalid email format. Unable to determine department.");
+        await signOut(auth);
+        return;
+      }
 
       // Store user info
       const userData = {
@@ -80,6 +84,7 @@ function Login({ setUser, user }) { // Accept user as prop
         email: user.email,
         username: username,
         rollNo: rollNo,
+        department: department,
         photoURL: user.photoURL,
       };
       await fetch("http://172.16.204.118:5000/routes/students", {
@@ -92,6 +97,7 @@ function Login({ setUser, user }) { // Accept user as prop
           email: user.email,
           firebaseUID: user.uid,
           rollNo: rollNo,
+          department: department,
         }),
       });
 
@@ -116,10 +122,10 @@ function Login({ setUser, user }) { // Accept user as prop
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-white text-black">
+    <div className="flex justify-center items-center min-h-screen bg-white text-black dark:bg-black dark:text-white">
       <div className="text-center w-11/12 max-w-md">
         <NavLink to="/">
-          <img src="CClogoW.jpg" alt="Logo" className="w-48 mx-auto mb-4" />
+          <img src={isDark? "CClogoB.jpg": "CClogoW.jpg"} alt="Logo" className="w-48 mx-auto mb-4" />
         </NavLink>
         <p className="text-sm mb-6">
           Cabin Check helps students quickly find professors and check their real-time availability in their cabins, ensuring efficient campus communication.
@@ -129,7 +135,7 @@ function Login({ setUser, user }) { // Accept user as prop
           className="flex items-center justify-center bg-neutral-800 text-white px-4 py-2 rounded-lg hover:bg-neutral-700 transition"
           disabled={loggingIn}
         >
-          <img src="google_icon.png" alt="Google Logo" className="w-5 mr-2" />
+          <img src="/google_icon.png" alt="Google Logo" className="w-5 mr-2" />
           {loggingIn ? "Signing in..." : "Continue with Google"}
         </button>
         {loggingIn && (

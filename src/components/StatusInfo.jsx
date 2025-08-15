@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
 import { auth } from '../../config/firebase'; // Import Firebase auth
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
@@ -42,6 +42,7 @@ function StatusInfo({ user }) {
         body: JSON.stringify({
           teacher: teacherEmail,
           student: user.username,
+          rollNo: user.rollNo,
           purpose: purpose
         }),
       });

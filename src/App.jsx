@@ -9,16 +9,22 @@ import Login from "./Login";
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
 import NotFound from "./components/NotFound";
+import Loading from "./components/Loading";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { extractRollNo } from "../utils/rollNoUtils";
-
+import { getDepartment } from "../utils/getDepartmentUtils";
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState([]);
   const [isSidebarFull, setIsSidebarFull] = useState(true);
-  const [isDark, setIsDark] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [isDark, setIsDark] = useState(() => {
+  const savedTheme = localStorage.getItem("theme");
+  return savedTheme
+    ? savedTheme === "dark"
+    : window.matchMedia("(prefers-color-scheme: dark)").matches;
+  });
 
 
   // Sidebar toggle
@@ -30,8 +36,10 @@ function App() {
   useEffect(() => {
     if (isDark) {
       document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
     } else {
       document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
     }
   }, [isDark]);
 
@@ -71,6 +79,7 @@ function App() {
           username: firebaseUser.email.split("@")[0],
           uid: firebaseUser.uid,
           rollNo: extractRollNo(firebaseUser.email),
+          department: getDepartment(firebaseUser.email),
         });
       } else {
         setUser(null);
@@ -81,7 +90,7 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  if (loading) return <div className="text-white text-center">Loading...</div>;
+  if (loading) return <Loading isDark={isDark} />;
 
   return (
     <BrowserRouter>
@@ -128,7 +137,7 @@ function App() {
               path="/requests"
               element={user ? <Requests user={user} /> : <Navigate to="/login" replace />}
             />
-            <Route path="/login" element={<Login setUser={setUser} user={user} />} 
+            <Route path="/login" element={<Login setUser={setUser} user={user} isDark={isDark}/>} 
             />
             <Route
               path="*"

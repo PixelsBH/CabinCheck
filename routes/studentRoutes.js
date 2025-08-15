@@ -1,6 +1,5 @@
 import express from "express";
 import {
-  getAllStudents,
   createStudent,
   getStudentById,
   updateStudent,
@@ -10,7 +9,7 @@ import {
 const router = express.Router();
 
 // Routes
-router.get("/", getAllStudents); // Fetch all students
+//router.get("/", getAllStudents); // Fetch all students
 router.post("/", createStudent); // Create a new student
 router.get("/:id", getStudentById); // Fetch a student by ID
 router.put("/:id", updateStudent); // Update a student

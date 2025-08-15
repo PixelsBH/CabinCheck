@@ -1,8 +1,9 @@
 import Student from "../models/Student.js";
 import { extractRollNo } from "../utils/rollNoUtils.js";
+import { getDepartment } from "../utils/getDepartmentUtils.js"
 
 // Fetch all students
-export const getAllStudents = async (req, res) => {
+/*export const getAllStudents = async (req, res) => {
   try {
     const students = await Student.find();
     res.status(200).json(students);
@@ -10,16 +11,23 @@ export const getAllStudents = async (req, res) => {
     res.status(500).json({ message: "Error fetching students", error: error.message });
   }
 };
+*/
 
 // Create a new student
 export const createStudent = async (req, res) => {
   try {
-    const { name, email, firebaseUID, rollNo: providedRollNo } = req.body;
+    const { name, email, firebaseUID, rollNo: providedRollNo , department: providedDepartment} = req.body;
 
     // Compute roll number if not provided
     const rollNo = providedRollNo || extractRollNo(email);
     if (rollNo === "Invalid Email") {
       return res.status(400).json({ message: "Invalid email format" });
+    }
+
+    // Validate department
+    const department = providedDepartment || getDepartment(email);
+    if (department === "Unknown Department") {
+      return res.status(400).json({ message: "Invalid department" });
     }
 
     // Check if the student already exists
@@ -30,7 +38,7 @@ export const createStudent = async (req, res) => {
     }
 
     // Create a new student
-    const newStudent = new Student({ name, email, firebaseUID, rollNo });
+    const newStudent = new Student({ name, email, firebaseUID, rollNo, department });
     await newStudent.save();
 
     res.status(201).json(newStudent);

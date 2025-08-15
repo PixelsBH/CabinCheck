@@ -18,13 +18,17 @@ export const getAllMeetings = async (req, res) => {
 // Create a new meeting
 export const createMeeting = async (req, res) => {
   try {
-    const { teacher, student, purpose } = req.body;
+    const { teacher, student, rollNo, purpose } = req.body;
 
-    // Log the incoming request body
-    console.log("Request Body:", req.body);
+    const existingMeeting = await Meeting.findOne({ teacher, student });
 
+    if (existingMeeting) {
+      return res.status(400).json({
+        message: "You already have a meeting request with this teacher."
+      });
+    }
     // Create a new meeting
-    const newMeeting = new Meeting({ teacher, student, purpose});
+    const newMeeting = new Meeting({ teacher, student, rollNo, purpose});
     await newMeeting.save();
 
     // Log the saved meeting
@@ -83,15 +87,26 @@ export const deleteMeeting = async (req, res) => {
 export const patchMeetingStatus = async (req, res) => {
   try {
     const { id } = req.params; // Extract meeting ID from route parameters
-    const { status } = req.body; // Extract status from request body
+    const { status, timeAllotted } = req.body; // Extract status adn timeAllotted from request body
 
     if (!["Approved", "Rejected"].includes(status)) {
       return res.status(400).json({ message: "Invalid status. Allowed values are 'Approved' or 'Rejected'." });
     }
 
+     // Prepare update object
+    const updateFields = { status };
+
+    if (status === "Approved" && timeAllotted) {
+      updateFields.timeAllotted = timeAllotted;
+    }
+
+    if (status === "Rejected") {
+      updateFields.timeAllotted = "Not Allotted";
+    }
+
     const updatedMeeting = await Meeting.findByIdAndUpdate(
       id,
-      { status },
+      updateFields,
       { new: true }
     );
 
@@ -99,7 +114,7 @@ export const patchMeetingStatus = async (req, res) => {
       return res.status(404).json({ message: "Meeting not found" });
     }
 
-    res.status(200).json({ message: `Meeting ${status.toLowerCase()} successfully`, updatedMeeting });
+    res.status(200).json({ message: `Meeting set to ${status.toLowerCase()} successfully`, updatedMeeting });
   } catch (error) {
     console.error("Error updating meeting status:", error);
     res.status(500).json({ message: "Error updating meeting status", error: error.message });

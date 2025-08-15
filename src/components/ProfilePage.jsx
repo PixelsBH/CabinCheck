@@ -1,29 +1,4 @@
-import React from 'react';
 import PropTypes from 'prop-types';
-import { extractRollNo } from "../../utils/rollNoUtils"; 
-
-// Helper function to determine department based on email
-const getDepartment = (email) => {
-  const regex = /^([\w\d]+)(\d{2})(bcs|bec|bcy|bcd)(\d{1,3})@iiitkottayam\.ac\.in$/i;
-  const match = email.match(regex);
-
-  if (!match) return "Unknown Department";
-
-  const program = match[3].toLowerCase(); 
-
-  switch (program) {
-    case "bcs":
-      return "Computer Science and Engineering";
-    case "bec":
-      return "Electronics and Communication Engineering";
-    case "bcy":
-      return "Computer Science and Engineering with Specialisation in Cyber Security";
-    case "bcd":
-      return "Computer Science and Engineering with Specialisation in Artificial Intelligence and Data Science";
-    default:
-      return "Unknown Department";
-  }
-};
 
 function ProfilePage({ user }) {
   return (
@@ -40,16 +15,16 @@ function ProfilePage({ user }) {
             <h2 className="text-xl font-semibold mb-4 text-black dark:text-white">Profile Information</h2>
             <div className="space-y-4">
               <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
-                <h3 className="text-sm text-black dark:text-gray-200">Email</h3>
-                <p className="text-black dark:text-white">{user?.email || "No email available"}</p>
+                <h3 className="t text-black dark:text-gray-200">Email</h3>
+                <p className="text-sm text-black dark:text-white">{user?.email || "No email available"}</p>
               </div>
               <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
-                <h3 className="text-sm text-black dark:text-gray-200">Roll No.</h3>
-                <p className="text-black dark:text-white">{user?.email ? extractRollNo(user.email) : "No roll number available"}</p>
+                <h3 className="text-black dark:text-gray-200">Roll No.</h3>
+                <p className="text-sm text-black dark:text-white">{user?.email ? user.rollNo : "No roll number available"}</p>
               </div>
               <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
-                <h3 className="text-sm text-black dark:text-gray-200">Department</h3>
-                <p className="text-black dark:text-white">{user?.email ? getDepartment(user.email) : "No department available"}</p>
+                <h3 className="text-black dark:text-gray-200">Department</h3>
+                <p className="text-sm text-black dark:text-white">{user?.email ? user.department : "No department available"}</p>
               </div>
             </div>
           </div>

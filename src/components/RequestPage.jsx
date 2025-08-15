@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 function Requests({ user }) {
   const [Requests, setRequests] = useState([]);
@@ -23,7 +23,7 @@ function Requests({ user }) {
     // Fetch Requests initially
     fetchRequests();
 
-    // Set up polling every 3 seconds
+    // Set up polling every 4 seconds
     const interval = setInterval(fetchRequests, 4000);
 
     // Cleanup interval on component unmount
@@ -76,9 +76,10 @@ function Requests({ user }) {
           {latestRequests.map((request) => (
             <li key={request._id} className="bg-gray-200 dark:bg-gray-900 p-4 rounded-lg text-black dark:text-white border border-gray-300 dark:border-gray-800 shadow-md">
               <p><strong>Teacher:</strong> {request.teacher}</p>
-              <p><strong>Date:</strong> {new Date(request.createdAt).toLocaleString()}</p>
-              <p><strong>Purpose:</strong>{request.purpose}</p>
+              <p><strong>Created At:</strong> {new Date(request.createdAt).toLocaleString()}</p>
+              <p><strong>Purpose:</strong> {request.purpose}</p>
               <p><strong>Status:</strong> {request.status}</p>
+              <p><strong>Time Allotted:</strong> {request.timeAllotted}</p>
               <button
                 onClick={() => handleClick(request.teacher, user.username)}
                 className="mt-2 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
