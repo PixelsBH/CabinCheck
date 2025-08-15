@@ -3,7 +3,6 @@ import {
   createStudent,
   getStudentById,
   updateStudent,
-  deleteStudent,
 } from "../controllers/studentController.js";
 
 const router = express.Router();
@@ -13,6 +12,5 @@ const router = express.Router();
 router.post("/", createStudent); // Create a new student
 router.get("/:id", getStudentById); // Fetch a student by ID
 router.put("/:id", updateStudent); // Update a student
-router.delete("/:id", deleteStudent); // Delete a student
 
 export default router;

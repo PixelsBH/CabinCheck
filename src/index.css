@@ -43,3 +43,14 @@ header {
   overflow-y: auto; /* Add scrolling if content overflows */
   color: white; /* Sidebar text color to white */
 }
+
+@layer components {
+  .Toastify__toast-theme--dark {
+    @apply bg-black text-white;
+  }
+
+  .Toastify__toast-theme--light {
+    @apply bg-white text-gray-900;
+  }
+}
+

@@ -31,9 +31,6 @@ export const createMeeting = async (req, res) => {
     const newMeeting = new Meeting({ teacher, student, rollNo, purpose});
     await newMeeting.save();
 
-    // Log the saved meeting
-    console.log("New Meeting Created:", newMeeting);
-
     res.status(201).json(newMeeting);
   } catch (error) {
     // Log the error for debugging
@@ -63,14 +60,8 @@ export const deleteMeeting = async (req, res) => {
   try {
     const { teacher, username } = req.params; // Extract teacher and student from route parameters
 
-    // Log the parameters for debugging
-    console.log("Delete Request Received - Teacher:", teacher, "Student:", username);
-
     // Find and delete all meetings where teacher and student match
     const deletedMeetings = await Meeting.deleteMany({ teacher, student: username });
-
-    // Log the result of the delete operation
-    console.log("Deleted Meetings Count:", deletedMeetings.deletedCount);
 
     if (deletedMeetings.deletedCount === 0) {
       return res.status(404).json({ message: "No meetings found to delete" });

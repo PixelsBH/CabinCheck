@@ -4,13 +4,15 @@ import { auth, provider } from "../config/firebase";
 import { signInWithPopup, signOut } from "firebase/auth";
 import { extractRollNo } from "../utils/rollNoUtils";
 import { getDepartment } from "../utils/getDepartmentUtils";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Login({ setUser, user, isDark }) { // Accept user as prop
   const navigate = useNavigate();
   const [loggingIn, setLoggingIn] = React.useState(false); // Add loading state
 
   // Redirect if already logged in
-  if (user) {
+  if (user && !loggingIn) {
     return <Navigate to="/" replace />;
   }
 
@@ -50,43 +52,37 @@ function Login({ setUser, user, isDark }) { // Accept user as prop
 
       // Validate email format
       if (!email.endsWith("@iiitkottayam.ac.in")) {
-        alert("Please use your IIIT Kottayam email.");
+        toast.error("Please use your IIIT Kottayam email.", { position: "bottom-center" });
         await signOut(auth);
+        setLoggingIn(false);
         return;
       }
 
       // Validate email according to Cabin Check rules
       const username = isValidCabinCheckEmail(email);
       if (!username) {
-        alert("Invalid email format. Only valid B.Tech students can log in.");
+        toast.error("Invalid email format. Only valid B.Tech students can log in.", { position: "bottom-center" });
         await signOut(auth);
+        setLoggingIn(false);
         return;
       }
 
       // Compute roll number using extractRollNo
       const rollNo = extractRollNo(email);
       if (rollNo === "Invalid Email") {
-        alert("Invalid email format. Unable to compute roll number.");
+        toast.error("Invalid email format. Unable to compute roll number.", { position: "bottom-center" });
         await signOut(auth);
+        setLoggingIn(false);
         return;
       }
       const department = getDepartment(email);
       if (department === "Unknown Department") {
-        alert("Invalid email format. Unable to determine department.");
+        toast.error("Invalid email format. Unable to determine department.", { position: "bottom-center" });
         await signOut(auth);
+        setLoggingIn(false);
         return;
       }
 
-      // Store user info
-      const userData = {
-        uid: user.uid,
-        displayName: user.displayName,
-        email: user.email,
-        username: username,
-        rollNo: rollNo,
-        department: department,
-        photoURL: user.photoURL,
-      };
       await fetch("http://172.16.204.118:5000/routes/students", {
         method: "POST",
         headers: {
@@ -106,7 +102,7 @@ function Login({ setUser, user, isDark }) { // Accept user as prop
 
     } catch (error) {
       console.error("Error during login:", error);
-      alert("Login failed. Please try again.");
+      toast.error("Login failed. Please try again.", { position: "bottom-center" });
       setLoggingIn(false); // Stop loading on error
     }
   };

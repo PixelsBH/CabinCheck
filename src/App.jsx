@@ -13,10 +13,10 @@ import Loading from "./components/Loading";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { extractRollNo } from "../utils/rollNoUtils";
 import { getDepartment } from "../utils/getDepartmentUtils";
+import { ToastContainer } from "react-toastify";
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [notifications, setNotifications] = useState([]);
   const [isSidebarFull, setIsSidebarFull] = useState(true);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isDark, setIsDark] = useState(() => {
@@ -42,26 +42,6 @@ function App() {
       localStorage.setItem("theme", "light");
     }
   }, [isDark]);
-
-  // Fetch Notifications
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchNotifications = async () => {
-      try {
-        const response = await fetch("http://172.16.204.118:5000/routes/notifications");
-        const data = await response.json();
-        if (isMounted) setNotifications(data);
-      } catch (error) {
-        console.error("Error fetching notifications:", error);
-      } finally {
-        if (isMounted) setTimeout(fetchNotifications, 2000);
-      }
-    };
-
-    fetchNotifications();
-    return () => { isMounted = false; };
-  }, []);
 
   // Auth State Listener
   useEffect(() => {
@@ -117,7 +97,7 @@ function App() {
                   <>
                     <WelcomeCard name={user.displayName} />
                     <div className="mt-8">
-                      <Notifications notifications={notifications} />
+                      <Notifications user={user} />
                     </div>
                   </>
                 ) : (
@@ -146,7 +126,8 @@ function App() {
           </Routes>
         </main>
       </div>
-    </BrowserRouter>
+      <ToastContainer/>
+    </BrowserRouter> 
   );
 }
 

@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
 import { auth } from '../../config/firebase'; // Import Firebase auth
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function StatusInfo({ user }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -46,14 +49,22 @@ function StatusInfo({ user }) {
           purpose: purpose
         }),
       });
-      if (!response.ok) {
-        throw new Error(`Failed to create request: ${response.statusText}`);
-      }
       const data = await response.json();
-      console.log("Meeting request created successfully:", data);
-    } catch (error) {
-      console.error("Error requesting meeting:", error);
+
+    if (!response.ok) {
+      // Show alert for duplicate requests
+      if (response.status === 400 && data.message) {
+        toast.error(data.message, { position: "bottom-center" });
+      } else {
+        toast.error(`Failed to create request: ${data.message || response.statusText}`, { position: "bottom-center" });
+      }
+      return; // Stop further execution
     }
+    toast.success("Meeting request sent successfully!", { position: "bottom-center" });
+  } catch (error) {
+    console.error("Error requesting meeting:", error);
+    toast.error("An unexpected error occurred while requesting a meeting.", { position: "bottom-center" });
+  }
   };
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {

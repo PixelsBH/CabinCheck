@@ -49,10 +49,15 @@ export const createTeacher = async (req, res) => {
 // Fetch a single teacher by ID
 export const getTeacherById = async (req, res) => {
   try {
-    const teacher = await Teacher.findById(req.params.id);
-    if (!teacher) {
-      return res.status(404).json({ message: "Teacher not found" });
+    const { firebaseUID }  = req.params;
+    if (!firebaseUID) {
+      return res.status(404).json({ message: "Invalid firebaseUID" });
     }
+    const teacher = await Teacher.findOne({ firebaseUID: firebaseUID });
+    if (!teacher) {
+      return res.status(405).json({ message: "Teacher not found" });
+    }
+
     res.status(200).json(teacher);
   } catch (error) {
     res.status(500).json({ message: "Error fetching teacher", error: error.message });
@@ -62,9 +67,12 @@ export const getTeacherById = async (req, res) => {
 // Update a teacher
 export const updateTeacher = async (req, res) => {
   try {
+    if (!firebaseUID) {
+      return res.status(404).json({ message: "Invalid firebaseUID" });
+    }
     const { name, email, status, office, image, firebaseUID, note } = req.body;
     const updatedTeacher = await Teacher.findByIdAndUpdate(
-      req.params.id,
+      { firebaseUID },
       { name, email, status, office, image, firebaseUID, note },
       { new: true }
     );
@@ -91,18 +99,5 @@ export const updateTeacherStatus = async (req, res) => {
     res.status(200).json(teacher);
   } catch (error) {
     res.status(500).json({ message: "Error updating teacher status", error: error.message });
-  }
-};
-
-// Delete a teacher
-export const deleteTeacher = async (req, res) => {
-  try {
-    const deletedTeacher = await Teacher.findByIdAndDelete(req.params.id);
-    if (!deletedTeacher) {
-      return res.status(404).json({ message: "Teacher not found" });
-    }
-    res.status(200).json({ message: "Teacher deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ message: "Error deleting teacher", error: error.message });
   }
 };

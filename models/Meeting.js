@@ -10,8 +10,7 @@ const MeetingSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }, // Add createdAt field
 });
 
-// Set TTL index on createdAt for 12 hours (43200 seconds)
-MeetingSchema.index({ createdAt: 1 }, { expireAfterSeconds: 54000 });
+MeetingSchema.index({ createdAt: 1 }, { expireAfterSeconds: 172800 });
 
 const Meeting = mongoose.model("Meeting", MeetingSchema);
 
