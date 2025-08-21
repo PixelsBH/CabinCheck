@@ -45,7 +45,7 @@ class Auth {
 
   Future<void> sendDataToDatabase(String name, String uid, String email,
       String image, BuildContext context, WidgetRef ref) async {
-    final url = Uri.parse("http://172.16.204.118:5000/routes/teachers");
+    final url = Uri.parse("http://192.168.137.85:5000/routes/teachers");
 
     try {
       final response = await http.post(

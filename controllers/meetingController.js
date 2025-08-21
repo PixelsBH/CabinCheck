@@ -1,5 +1,7 @@
 import Meeting from "../models/Meeting.js";
-
+import Teacher from "../models/Teacher.js";
+import admin from "../config/firebaseAdmin.js";
+import { send } from "vite";
 // Fetch all meetings
 export const getAllMeetings = async (req, res) => {
   try {
@@ -16,6 +18,27 @@ export const getAllMeetings = async (req, res) => {
 };
 
 // Create a new meeting
+const sendNotification = async (teacher, rollNo, purpose) => {
+  let notificationSent = false;
+try {
+  const teacherDoc = await Teacher.findOne({ email: teacher });
+  if (teacherDoc && teacherDoc.fcmToken) {
+    const message = {
+      notification: {
+        title: "New Meeting Request",
+        body: `${rollNo} has requested a meeting. Purpose: ${purpose}`
+      },
+      token: teacherDoc.fcmToken,
+    };
+    await admin.messaging().send(message);
+    notificationSent = true;
+  } else {
+    console.log("Teacher not found or no FCM token:", teacher);
+  }
+} catch (err) {
+  console.error("Error sending FCM notification:", err);
+}
+}
 export const createMeeting = async (req, res) => {
   try {
     const { teacher, student, rollNo, purpose } = req.body;
@@ -30,14 +53,15 @@ export const createMeeting = async (req, res) => {
     // Create a new meeting
     const newMeeting = new Meeting({ teacher, student, rollNo, purpose});
     await newMeeting.save();
-
-    res.status(201).json(newMeeting);
+    sendNotification(teacher, rollNo, purpose); // Send notification after saving the meeting
+    console.log("Meeting created successfully:", newMeeting);
+    res.status(200).json(newMeeting);
   } catch (error) {
     // Log the error for debugging
     console.error("Error creating meeting:", error);
 
     res.status(500).json({ message: "Error creating meeting", error: error.message });
-  }
+  } 
 };
 
 // Fetch meetings by teacher email

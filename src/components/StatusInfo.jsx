@@ -4,7 +4,7 @@ import { auth } from '../../config/firebase'; // Import Firebase auth
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import api from '../api';
 
 function StatusInfo({ user }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -28,43 +28,32 @@ function StatusInfo({ user }) {
 
   const handleSendRequest = async () => {
     if (selectedTeacher) {
-      await requestMeeting(selectedTeacher._id, selectedTeacher.name, selectedTeacher.email, meetingPurpose);
+      await requestMeeting(selectedTeacher.name, meetingPurpose);
       closePopup();
     }
   };
   
   const navigate = useNavigate();
 
-  const requestMeeting = async (teacherId, teacherName, teacherEmail, purpose = "Requesting a meeting") => {
+  const requestMeeting = async (teacherEmail, purpose = "Requesting a meeting") => {
     try {
-      const response = await fetch("http://172.16.204.118:5000/routes/meetings", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          teacher: teacherEmail,
-          student: user.username,
-          rollNo: user.rollNo,
-          purpose: purpose
-        }),
+      const response = await api.post("/meetings", {
+        teacher: teacherEmail,
+        student: user.username,
+        rollNo: user.rollNo,
+        purpose: purpose,
       });
-      const data = await response.json();
 
-    if (!response.ok) {
-      // Show alert for duplicate requests
-      if (response.status === 400 && data.message) {
-        toast.error(data.message, { position: "bottom-center" });
+      toast.success("Meeting request sent successfully!", { position: "bottom-center" });
+      return response.data;
+    } catch (error) {
+      console.error("Error requesting meeting:", error);
+      if (error.response?.status === 400 && error.response?.data?.message) {
+        toast.error(error.response.data.message, { position: "bottom-center" });
       } else {
-        toast.error(`Failed to create request: ${data.message || response.statusText}`, { position: "bottom-center" });
+        toast.error("Failed to create request.", { position: "bottom-center" });
       }
-      return; // Stop further execution
     }
-    toast.success("Meeting request sent successfully!", { position: "bottom-center" });
-  } catch (error) {
-    console.error("Error requesting meeting:", error);
-    toast.error("An unexpected error occurred while requesting a meeting.", { position: "bottom-center" });
-  }
   };
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
@@ -82,16 +71,13 @@ function StatusInfo({ user }) {
 
     const fetchTeachers = async () => {
       try {
-        const response = await fetch("http://172.16.204.118:5000/routes/teachers");
-        const data = await response.json();
-        if (isMounted) {
-          setTeachers(data); // Update state only if the component is still mounted
-        }
+        const response = await api.get("/teachers")
+        if (isMounted) setTeachers(response.data);
       } catch (error) {
         console.error("Error fetching teachers:", error);
       } finally {
         if (isMounted) {
-          setTimeout(fetchTeachers, 2000); // Schedule the next fetch
+          setTimeout(fetchTeachers, 2000);
         }
       }
     };
@@ -129,6 +115,7 @@ function StatusInfo({ user }) {
                 src={teacher.image}
                 alt={teacher.name}
                 className="w-16 h-16 rounded-full"
+                loading="lazy"
               />
               <div>
                 <h3 className="text-lg font-semibold text-black dark:text-white">{teacher.name}</h3>

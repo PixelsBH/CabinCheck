@@ -1,26 +1,25 @@
 import express from "express";
 import mongoose from "mongoose";
 import connectDB from "./config/db.js";
-import authRoutes from "./routes/auth.js";
 import cors from "cors"; 
 import dotenv from "dotenv";
+import { verifyFirebaseToken } from "./middlewares/authMiddleware.js";
 
 dotenv.config();
 
 // Import all models
 import "./models/importModels.js";
+
+// Import all routes
+import authRoutes from "./routes/auth.js";
 import teacherRoutes from "./routes/teacherRoutes.js";
 import studentRoutes from "./routes/studentRoutes.js";
 import scheduleRoutes from "./routes/scheduleRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
 import meetingRoutes from "./routes/meetingRoutes.js"; // Import meeting routes
-import { auth } from "./config/firebase.js"; // Import Firebase auth from firebase.js
-import { getFirestore, doc, getDoc } from "firebase/firestore"; // Import Firestore functions
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-
-const db = getFirestore(); // Initialize Firestore
 
 // Middleware
 app.use(express.json());
@@ -31,11 +30,12 @@ connectDB();
 
 // Routes
 app.use("/routes/auth", authRoutes);
-app.use("/routes/teachers", teacherRoutes); // Add teacher routes
-app.use("/routes/students", studentRoutes); // Add student routes
-app.use("/routes/schedules", scheduleRoutes); // Add schedule routes
-app.use("/routes/notifications", notificationRoutes); // Add notification routes
-app.use("/routes/meetings", meetingRoutes); // Add meeting routes
+
+app.use("/routes/teachers",verifyFirebaseToken, teacherRoutes); // Add teacher routes
+app.use("/routes/students",verifyFirebaseToken, studentRoutes); // Add student routes
+app.use("/routes/schedules",verifyFirebaseToken, scheduleRoutes); // Add schedule routes
+app.use("/routes/notifications",verifyFirebaseToken, notificationRoutes); // Add notification routes
+app.use("/routes/meetings",verifyFirebaseToken, meetingRoutes); // Add meeting routes
 
 // Default route for root path
 app.get("/", (req, res) => {
@@ -44,5 +44,5 @@ app.get("/", (req, res) => {
 
 mongoose.connection.once('open', () => {
   console.log("Connected to MongoDB");
-  app.listen(PORT, '0.0.0.0', () => console.log(`Server running on http://172.16.204.118:${PORT}`)); // Replace with your IPv4 address
+  app.listen(PORT, '0.0.0.0', () => console.log(`Server running on http://192.168.137.85:${PORT}`)); // Replace with your IPv4 address
 });

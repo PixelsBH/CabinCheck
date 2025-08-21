@@ -7,10 +7,10 @@ function ProfilePage({ user }) {
         <div className="flex flex-col items-center space-y-4">
           <img
             src={user?.photoURL || "/default-profile.png"}
-            alt={user?.displayName || "User"}
+            alt={user?.username || "User"}
             className="w-32 h-32 rounded-full"
           />
-          <h1 className="text-3xl font-bold text-black dark:text-white">{user?.displayName || "Guest"}</h1>
+          <h1 className="text-3xl font-bold text-black dark:text-white">{user?.username || "Guest"}</h1>
           <div className="w-full mt-8">
             <h2 className="text-xl font-semibold mb-4 text-black dark:text-white">Profile Information</h2>
             <div className="space-y-4">
@@ -36,7 +36,7 @@ function ProfilePage({ user }) {
 
 ProfilePage.propTypes = {
   user: PropTypes.shape({
-    displayName: PropTypes.string,
+    username: PropTypes.string,
     email: PropTypes.string,
     username: PropTypes.string,
     photoURL: PropTypes.string,

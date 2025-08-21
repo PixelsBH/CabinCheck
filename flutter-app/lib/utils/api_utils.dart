@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 Future<void> addCustomEvent(String teacherEmail, String title, String startTime,
     String endTime, String date, String descp) async {
   final url = Uri.parse(
-      'http://172.16.204.118:5000/routes/schedules'); // Replace with your API URL
+      'http://192.168.137.85:5000/routes/schedules'); // Replace with your API URL
   print(teacherEmail);
   print(startTime);
   print(endTime);

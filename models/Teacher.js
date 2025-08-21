@@ -8,6 +8,7 @@ const TeacherSchema = new mongoose.Schema({
   office: { type: String, required: false },
   image: { type: String },
   firebaseUID: { type: String },
+  fcmToken: { type: String },
 });
 
 const Teacher = mongoose.model("Teacher", TeacherSchema);

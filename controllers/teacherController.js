@@ -101,3 +101,26 @@ export const updateTeacherStatus = async (req, res) => {
     res.status(500).json({ message: "Error updating teacher status", error: error.message });
   }
 };
+
+export const updateFcmToken = async (req, res) => {
+  try {
+    const { firebaseUID } = req.params;
+
+    if (!firebaseUID) {
+      return res.status(400).json({ message: "firebaseUID are required" });
+    }
+
+    const fcmToken = req.body.fcmToken;
+    const teacher = await Teacher.findOneAndUpdate(
+      { firebaseUID },
+      { fcmToken },
+      { new: true }
+    );
+    if (!teacher) {
+      return res.status(404).json({ message: "Teacher not found" });
+    }
+    res.status(200).json(teacher);
+  } catch (error) {
+    res.status(500).json({ message: "Error updating fcmToken", error: error.message });
+  }
+};

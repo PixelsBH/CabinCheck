@@ -103,7 +103,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
     print(provideremail);
     try {
       final url = Uri.parse(
-          'http://172.16.204.118:5000/routes/schedules/$provideremail');
+          'http://192.168.137.85:5000/routes/schedules/$provideremail');
       final response = await http.get(
         url,
         headers: {'Content-Type': 'application/json'},
@@ -205,7 +205,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
     try {
       final teacherEmail = ref.read(emailProvider);
       print(teacherEmail);
-      final url = Uri.parse('http://172.16.204.118:5000/routes/schedules');
+      final url = Uri.parse('http://192.168.137.85:5000/routes/schedules');
 
       final response = await http.delete(
         url,

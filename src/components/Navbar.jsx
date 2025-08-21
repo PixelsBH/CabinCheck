@@ -80,10 +80,10 @@ function Navbar({ user, toggleSidebar, toggleDark, isDark, toggleMobileSidebar }
         >
           <img
             src={user?.photoURL || "/default-profile.png"}
-            alt={user?.displayName || "User"}
+            alt={user?.username || "User"}
             className="w-10 h-10 rounded-full"
           />
-          <span className="hidden md:inline">{user?.displayName || "Guest"}</span>
+          <span className="hidden md:inline">{user?.username || "Guest"}</span>
           <ChevronDown size={20} />
         </button>
 
@@ -111,7 +111,7 @@ function Navbar({ user, toggleSidebar, toggleDark, isDark, toggleMobileSidebar }
 
 Navbar.propTypes = {
   user: PropTypes.shape({
-    displayName: PropTypes.string,
+    username: PropTypes.string,
     photoURL: PropTypes.string,
   }),
   toggleSidebar: PropTypes.func.isRequired,       // Desktop sidebar toggle

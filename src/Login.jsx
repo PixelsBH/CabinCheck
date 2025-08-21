@@ -4,6 +4,7 @@ import { auth, provider } from "../config/firebase";
 import { signInWithPopup, signOut } from "firebase/auth";
 import { extractRollNo } from "../utils/rollNoUtils";
 import { getDepartment } from "../utils/getDepartmentUtils";
+import api from "./api"
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -11,17 +12,17 @@ function Login({ setUser, user, isDark }) { // Accept user as prop
   const navigate = useNavigate();
   const [loggingIn, setLoggingIn] = React.useState(false); // Add loading state
 
-  // Redirect if already logged in
-  if (user && !loggingIn) {
-    return <Navigate to="/" replace />;
-  }
-
   // Add this effect to reset loggingIn if user is authenticated and Login is still rendered
   React.useEffect(() => {
     // If the user is authenticated, this component should not be rendered,
     // but in case it is, reset loggingIn to false
     setLoggingIn(false);
   }, []);
+
+  // Redirect if already logged in
+  if (user && !loggingIn) {
+    return <Navigate to="/" replace />;
+  }
 
   const isValidCabinCheckEmail = (email) => {
     const regex = /^([a-zA-Z]+)(\d{2})(bcs|bec|bcy|bcd)(\d{1,3})@iiitkottayam\.ac\.in$/;
@@ -83,37 +84,38 @@ function Login({ setUser, user, isDark }) { // Accept user as prop
         return;
       }
 
-      await fetch("http://172.16.204.118:5000/routes/students", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: user.displayName,
-          email: user.email,
-          firebaseUID: user.uid,
-          rollNo: rollNo,
-          department: department,
-        }),
+      await api.post("http://192.168.137.85:5000/routes/students", {
+        name: user.displayName,
+        email: user.email,
+        firebaseUID: user.uid,
+        rollNo,
+        department,
       });
 
       console.log("Google login successful. Redirecting...");
-      window.location.replace("/"); // Force reload and go to Dashboard
+      navigate("/");
 
     } catch (error) {
-      console.error("Error during login:", error);
-      toast.error("Login failed. Please try again.", { position: "bottom-center" });
-      setLoggingIn(false); // Stop loading on error
+      console.error("Firebase login error:", error);
+
+    switch (error.code) {
+      case "auth/popup-closed-by-user":
+        toast.error("Popup closed before completing sign in.");
+        break;
+      case "auth/cancelled-popup-request":
+        toast.error("Sign in request was cancelled.");
+        break;
+      case "auth/popup-blocked":
+        toast.error("Popup was blocked by your browser. Enable popups and try again.");
+        break;
+      case "auth/network-request-failed":
+        toast.error("Network error. Check your connection.");
+        break;
+      default:
+        toast.error("Login failed. Please try again.");
     }
-  };
 
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      setUser(null); // Clear user state
-      navigate("/login"); // Redirect to login page
-    } catch (error) {
-      console.error("Error during logout:", error);
+    setLoggingIn(false); 
     }
   };
 

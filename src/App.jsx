@@ -53,10 +53,9 @@ function App() {
         )}&background=random`;
 
         setUser({
-          displayName: firebaseUser.displayName,
           photoURL: firebaseUser.photoURL || defaultPhotoURL,
+          username: firebaseUser.displayName,
           email: firebaseUser.email,
-          username: firebaseUser.email.split("@")[0],
           uid: firebaseUser.uid,
           rollNo: extractRollNo(firebaseUser.email),
           department: getDepartment(firebaseUser.email),
@@ -95,7 +94,7 @@ function App() {
               element={
                 user ? (
                   <>
-                    <WelcomeCard name={user.displayName} />
+                    <WelcomeCard name={user.username} />
                     <div className="mt-8">
                       <Notifications user={user} />
                     </div>

@@ -5,10 +5,10 @@ import Student from "../models/Student.js";
 const router = express.Router();
 
 router.post("/login", async (req, res) => {
-    const { uid, displayName, email, photoURL } = req.body;
+    const { uid, username, email, photoURL } = req.body;
 
     try {
-        console.log("Login request received:", { uid, displayName, email, photoURL });
+        console.log("Login request received:", { uid, username, email, photoURL });
 
         // Check if the user exists in the Teacher collection
         let user = await Teacher.findOne({ firebaseUID: uid });
@@ -24,7 +24,7 @@ router.post("/login", async (req, res) => {
         if (!user) {
             console.log("User not found, creating new Student entry...");
             user = new Student({
-                name: displayName,
+                name: username,
                 email,
                 firebaseUID: uid
             });
