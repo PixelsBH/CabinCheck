@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getAllTeachers,
+  searchTeachers,
   createTeacher,
   getTeacherById,
   updateTeacher,
@@ -12,6 +13,7 @@ const router = express.Router();
 
 // Routes
 router.get("/", getAllTeachers); // Fetch all teachers
+router.get("/search", searchTeachers); // Search teachers by name
 router.post("/", createTeacher); // Create a new teacher
 router.get("/:firebaseUID", getTeacherById); // Fetch a teacher by ID
 router.put("/:firebaseUID", updateTeacher); // Update a teacher

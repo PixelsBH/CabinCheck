@@ -84,7 +84,7 @@ function Login({ setUser, user, isDark }) { // Accept user as prop
         return;
       }
 
-      await api.post("http://192.168.137.85:5000/routes/students", {
+      await api.post("http://192.168.56.1:5000/routes/students", {
         name: user.displayName,
         email: user.email,
         firebaseUID: user.uid,

@@ -6,6 +6,7 @@ const StudentSchema = new mongoose.Schema({
   firebaseUID: { type: String, required: true, unique: true },
   rollNo: { type: String, required: true },
   department: { type: String, required: true },
+  pinnedTeachers: [{ type: String }], // Array of teacher emails
 });
 
 const Student = mongoose.model("Student", StudentSchema);

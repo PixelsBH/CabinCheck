@@ -44,5 +44,5 @@ app.get("/", (req, res) => {
 
 mongoose.connection.once('open', () => {
   console.log("Connected to MongoDB");
-  app.listen(PORT, '0.0.0.0', () => console.log(`Server running on http://192.168.137.85:${PORT}`)); // Replace with your IPv4 address
+  app.listen(PORT, '0.0.0.0', () => console.log(`Server running on http://192.168.56.1:${PORT}`)); // Replace with your IPv4 address
 });

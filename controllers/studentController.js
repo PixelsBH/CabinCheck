@@ -1,4 +1,5 @@
 import Student from "../models/Student.js";
+import Teacher from "../models/Teacher.js";
 import { extractRollNo } from "../utils/rollNoUtils.js";
 import { getDepartment } from "../utils/getDepartmentUtils.js"
 
@@ -73,3 +74,61 @@ export const updateStudent = async (req, res) => {
   }
 };
 
+
+export const togglePinTeacher = async (req, res) => {
+  try {
+    const firebaseUID = req.userId; // authenticated student's firebaseUID
+    const teacherEmail = req.params.email; // teacher's email from URL param
+    const student = await Student.findOne( firebaseUID );
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    // Ensure pinnedTeachers is always an array of strings
+    if (!Array.isArray(student.pinnedTeachers)) {
+      student.pinnedTeachers = [];
+    }
+
+    // Pin or Unpin logic
+    if (!student.pinnedTeachers.includes(teacherEmail)) {
+      student.pinnedTeachers.push(teacherEmail);
+      await student.save();
+      return res.json({
+        message: "Teacher pinned successfully",
+        pinnedTeachers: student.pinnedTeachers,
+        pinned: true,
+      });
+    } else {
+      student.pinnedTeachers = student.pinnedTeachers.filter(
+        (email) => email !== teacherEmail
+      );
+      await student.save();
+      return res.json({
+        message: "Teacher unpinned successfully",
+        pinnedTeachers: student.pinnedTeachers,
+        pinned: false,
+      });
+    }
+  } catch (err) {
+    console.error("Error in togglePinnedTeacher:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+export const getPinnedTeachers = async (req, res) => {
+  try {
+    const firebaseUID = req.params.id; // from URL param
+    const student = await Student.findOne(firebaseUID).populate("pinnedTeachers");
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    const teachers = await Teacher.find({ email: { $in: student.pinnedTeachers } });
+
+    res.json(teachers);
+  } catch (error) {
+    console.error("Error fetching pinned teachers:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

@@ -1,4 +1,5 @@
 import Teacher from "../models/Teacher.js";
+import Student from "../models/Student.js";
 
 // Fetch all teachers
 export const getAllTeachers = async (req, res) => {
@@ -122,5 +123,42 @@ export const updateFcmToken = async (req, res) => {
     res.status(200).json(teacher);
   } catch (error) {
     res.status(500).json({ message: "Error updating fcmToken", error: error.message });
+  }
+};
+
+export const searchTeachers = async (req, res) => {
+  try {
+    const { query } = req.query;
+    const studentId = req.userId; // assume middleware set this
+
+    // Search by name or email
+    const teachers = await Teacher.find({
+      $or: [
+        { name: { $regex: query, $options: "i" } },
+        { email: { $regex: query, $options: "i" } },
+      ],
+    }).select("name email status note office image"); // ✅ status included
+
+    // Save recent search for student
+    if (studentId && teachers.length > 0) {
+      const student = await Student.findById(studentId);
+      if (student) {
+        const foundId = teachers[0]._id;
+
+        student.recentSearches = [
+          foundId,
+          ...student.recentSearches.filter(
+            (id) => id.toString() !== foundId.toString()
+          ),
+        ].slice(0, 5);
+
+        await student.save();
+      }
+    }
+
+    res.json(teachers);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
   }
 };

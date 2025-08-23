@@ -12,7 +12,7 @@ NOTE: API Keys and their instructions are mentioned in api_keys.pdf
 
 1. Run `npm install`
 
-2. Use vscode search function to find local ip (eg. 192.168.137.85) and replace with your own local IPv4
+2. Use vscode search function to find local ip (eg. 192.168.56.1) and replace with your own local IPv4
 
 3. Run `npm run dev`
 

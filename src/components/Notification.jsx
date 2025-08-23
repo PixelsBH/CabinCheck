@@ -14,7 +14,7 @@ function Notifications({ user }) {
     const fetchNotifications = async () => {
       if (!user || !user.rollNo) return;
       try {
-        const response = await api.get("http://192.168.137.85:5000/routes/notifications/roll/${encodeURIComponent(user.rollNo)}"
+        const response = await api.get("http://192.168.56.1:5000/routes/notifications/roll/${encodeURIComponent(user.rollNo)}"
         );
         if (isMounted.current) setNotifications(response.data);
       } catch (error) {

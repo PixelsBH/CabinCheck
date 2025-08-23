@@ -44,7 +44,7 @@ class _NotePageState extends ConsumerState<NotePage> {
     try {
       final teacherName = ref.read(nameProvider);
       final response = await http.get(Uri.parse(
-          'http://192.168.137.85:5000/routes/notifications/$teacherName'));
+          'http://192.168.56.1:5000/routes/notifications/$teacherName'));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -114,7 +114,7 @@ class _NotePageState extends ConsumerState<NotePage> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.137.85:5000/routes/notifications/'),
+        Uri.parse('http://192.168.56.1:5000/routes/notifications/'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'title': title,
@@ -147,7 +147,7 @@ class _NotePageState extends ConsumerState<NotePage> {
       final teacherName = ref.read(nameProvider);
       final response = await http.delete(
         Uri.parse(
-            'http://192.168.137.85:5000/routes/notifications/$teacherName'),
+            'http://192.168.56.1:5000/routes/notifications/$teacherName'),
       );
 
       if (response.statusCode == 200) {

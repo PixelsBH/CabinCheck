@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const TeacherSchema = new mongoose.Schema({
-  name: { type: String, required: true },
+  name: { type: String, required: true, index: true },
   email: { type: String, required: true, unique: true },
   status: { type: Boolean, required: true },
   note: { type: String, default: "" },
@@ -10,6 +10,9 @@ const TeacherSchema = new mongoose.Schema({
   firebaseUID: { type: String },
   fcmToken: { type: String },
 });
+
+// Index to speed up name-based searches (especially if you use regex)
+TeacherSchema.index({ name: "text" });
 
 const Teacher = mongoose.model("Teacher", TeacherSchema);
 

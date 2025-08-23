@@ -38,7 +38,6 @@ ProfilePage.propTypes = {
   user: PropTypes.shape({
     username: PropTypes.string,
     email: PropTypes.string,
-    username: PropTypes.string,
     photoURL: PropTypes.string,
   }),
 };
