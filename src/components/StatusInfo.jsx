@@ -5,6 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import api from '../api';
+import { io } from 'socket.io-client';
+import TeacherCard from './TeacherCard';
+
+// Connect to your backend Socket.IO server
+const socket = io("http://192.168.56.1:5000");
 
 function StatusInfo({ user }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -14,8 +19,14 @@ function StatusInfo({ user }) {
   const [showPopup, setShowPopup] = useState(false);
   const [selectedTeacher, setSelectedTeacher] = useState(null);
   const [meetingPurpose, setMeetingPurpose] = useState('');
+  const [allTeachers, setAllTeachers] = useState([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [showAll, setShowAll] = useState(false);
 
   const navigate = useNavigate();
+
+  // Popup handlers
 
   const openPopup = (teacher) => {
     setSelectedTeacher(teacher);
@@ -57,6 +68,7 @@ function StatusInfo({ user }) {
     }
   };
 
+  //Auth state listener
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
       if (!currentUser) {
@@ -68,6 +80,7 @@ function StatusInfo({ user }) {
     return () => unsubscribe();
   }, [navigate]);
 
+  // Fetch searched teachers when searchTerm changes
   useEffect(() => {
     const fetchSearchedTeachers = async () => {
       if (!searchTerm.trim()) {
@@ -84,6 +97,7 @@ function StatusInfo({ user }) {
     fetchSearchedTeachers();
   }, [searchTerm]);
 
+  // Fetch pinned teachers
   useEffect(() => {
     let isMounted = true;
 
@@ -102,22 +116,42 @@ function StatusInfo({ user }) {
     };
     fetchPinnedTeachers();
     return () => { isMounted = false; };
-  }, []);
+  }, [user.uid]);
 
-  const togglePin = async (teacherEmail) => {
-    try {
-      const response = await api.patch(`/students/pin/${teacherEmail}`);
-      toast.success(response.data.message, { position: "bottom-center" });
-      // refresh teachers after pin/unpin
-      const res = await api.get("/students/pinned");
-      setTeachers(res.data);
-    } catch (error) {
-      console.error("Error pinning/unpinning:", error);
+  const fetchAllTeachers = async (pageNum = 1) => {
+  try {
+    const res = await api.get(`/teachers/all?page=${pageNum}&limit=20`);
+    setAllTeachers(prev => [...prev, ...res.data.teachers]);
+    setHasMore(pageNum < res.data.totalPages);
+  } catch (err) {
+    console.error("Error fetching all teachers:", err);
+  }
+};
+
+// Load first page when button clicked
+const handleShowAll = () => {
+  setShowAll(true);
+  fetchAllTeachers(1);
+};
+
+// Infinite scroll
+useEffect(() => {
+  if (!showAll || !hasMore) return;
+
+  const handleScroll = () => {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 200) {
+      fetchAllTeachers(page + 1);
+      setPage(prev => prev + 1);
     }
   };
 
+  window.addEventListener("scroll", handleScroll);
+  return () => window.removeEventListener("scroll", handleScroll);
+  }, [showAll, page, hasMore]);
+
   return (
     <div className="min-h-screen bg-white dark:bg-black p-2 sm:p-6">
+
       {/* Search bar */}
       <div className="relative flex items-center space-x-3 mb-6 p-1 rounded-lg">
         <Search className="text-black dark:text-white" size={20} />
@@ -132,135 +166,75 @@ function StatusInfo({ user }) {
 
       {/* Search Results */}
       {searchTerm.trim() && (
-        <>
-          <h1 className="text-xl font-bold text-black dark:text-white mb-4">
-            Search Results
-          </h1>
-          <div className="flex flex-col gap-6 md:grid md:grid-cols-2 lg:grid-cols-3 mb-10">
-            {searchedTeachers.length === 0 ? (
-              <p className="text-gray-700 dark:text-gray-400">No teachers found</p>
-            ) : (
-              searchedTeachers.map((teacher) => (
-                <div
+        <div className="mb-10">
+          <h1 className="text-xl font-bold text-black dark:text-white mb-4">Search Results</h1>
+          {searchedTeachers.length === 0 ? (
+            <p className="text-gray-700 dark:text-gray-400">No teachers found</p>
+          ) : (
+            <div className="flex flex-col gap-6 md:grid md:grid-cols-2 lg:grid-cols-3">
+              {searchedTeachers.map((teacher) => (
+                <TeacherCard
                   key={teacher._id}
-                  className="relative rounded-lg p-4 sm:p-6 space-y-4 border border-gray-200 dark:border-gray-800 shadow-md hover:shadow-lg transition-shadow duration-300"
-                >
-                  {/* Pin button */}
-                  <button
-                    className="absolute top-2 right-2 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
-                    onClick={() => togglePin(teacher.email)}
-                  >
-                    <Pin
-                      size={18}
-                      className={teacher.isPinned ? "text-blue-500" : "text-gray-400"}
-                    />
-                  </button>
-
-                  <div className="flex items-center space-x-4">
-                    <img
-                      src={teacher.image}
-                      alt={teacher.name}
-                      className="w-16 h-16 rounded-full"
-                      loading="lazy"
-                    />
-                    <div>
-                      <h3 className="text-lg font-semibold text-black dark:text-white">
-                        {teacher.name}
-                      </h3>
-                      <p className="text-gray-700 dark:text-gray-400 text-sm">{teacher.email}</p>
-                      <p className="text-gray-700 dark:text-gray-400">Note: {teacher.note}</p>
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap gap-2 justify-between items-center pt-4 border-t border-gray-800 dark:border-gray-200">
-                    <span className="text-sm font-medium bg-gray-300 dark:bg-gray-700 px-4 py-1.5 rounded-full text-gray-800 dark:text-gray-200">
-                      {teacher.office}
-                    </span>
-                    <button
-                      className="px-4 py-1.5 text-sm font-medium bg-sky-300 text-blue-700 rounded-full hover:bg-sky-500 transition-colors duration-300"
-                      onClick={() => openPopup(teacher)}
-                    >
-                      Request
-                    </button>
-                    <div
-                      className={`px-4 py-1.5 rounded-full text-sm font-medium ${
-                        teacher.status
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-red-100 text-red-600'
-                      }`}
-                    >
-                      {teacher.status ? 'In Cabin' : 'Out of Cabin'}
-                    </div>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        </>
+                  teacher={teacher}
+                  userId={user.uid}
+                  openPopup={openPopup}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       )}
 
       {/* Pinned Teachers */}
-      <h1 className="text-2xl font-bold text-black dark:text-white mb-6">
-        Pinned Teachers
-      </h1>
-      <div className="flex flex-col gap-6 md:grid md:grid-cols-2 lg:grid-cols-3">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-black dark:text-white mb-4">Pinned Teachers</h1>
         {teachers.length === 0 ? (
           <p className="text-gray-700 dark:text-gray-400">No pinned teachers</p>
         ) : (
-        teachers.map((teacher) => (
-          <div
-            key={teacher._id}
-            className="relative rounded-lg p-4 sm:p-6 space-y-4 border border-gray-200 dark:border-gray-800 shadow-md hover:shadow-lg transition-shadow duration-300"
-          >
-            {/* Pin button top-right */}
-            <button
-              className="absolute top-2 right-2 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
-              onClick={() => togglePin(teacher.email)}
-            >
-              <Pin
-                size={18}
-                className={teacher.isPinned ? "text-blue-500" : "text-gray-400"}
+          <div className="flex flex-col gap-6 md:grid md:grid-cols-2 lg:grid-cols-3">
+            {teachers.map((teacher) => (
+              <TeacherCard
+                key={teacher._id}
+                teacher={teacher}
+                userId={user.uid}
+                openPopup={openPopup}
               />
-            </button>
-
-            <div className="flex items-center space-x-4">
-              <img
-                src={teacher.image}
-                alt={teacher.name}
-                className="w-16 h-16 rounded-full"
-                loading="lazy"
-              />
-              <div>
-                <h3 className="text-lg font-semibold text-black dark:text-white">
-                  {teacher.name}
-                </h3>
-                <p className="text-gray-700 dark:text-gray-400 text-sm">{teacher.email}</p>
-                <p className="text-gray-700 dark:text-gray-400">Note: {teacher.note}</p>
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-2 justify-between items-center pt-4 border-t border-gray-800 dark:border-gray-200">
-              <span className="text-sm font-medium bg-gray-300 dark:bg-gray-700 px-4 py-1.5 rounded-full text-gray-800 dark:text-gray-200">
-                {teacher.office}
-              </span>
-              <button
-                className="px-4 py-1.5 text-sm font-medium bg-sky-300 text-blue-700 rounded-full hover:bg-sky-500 transition-colors duration-300"
-                onClick={() => openPopup(teacher)}
-              >
-                Request
-              </button>
-              <div
-                className={`px-4 py-1.5 rounded-full text-sm font-medium ${
-                  teacher.status
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-red-100 text-red-600'
-                }`}
-              >
-                {teacher.status ? 'In Cabin' : 'Out of Cabin'}
-              </div>
-            </div>
+            ))}
           </div>
-        ))
         )}
       </div>
+
+      {/* Show All Teachers Button */}
+      {!showAll && (
+        <div className="mt-6 flex justify-center">
+          <button
+            className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors duration-300"
+            onClick={handleShowAll}
+          >
+            Show All Teachers
+          </button>
+        </div>
+      )}
+
+      {/* All Teachers */}
+      {showAll && (
+        <div className="mt-6">
+          <h1 className="text-2xl font-bold mb-4 text-black dark:text-white">All Teachers</h1>
+          <div className="flex flex-col gap-6 md:grid md:grid-cols-2 lg:grid-cols-3">
+            {allTeachers.map((teacher) => (
+              <TeacherCard
+                key={teacher._id}
+                teacher={teacher}
+                userId={user.uid}
+                openPopup={openPopup}
+              />
+            ))}
+          </div>
+          {!hasMore && (
+            <p className="text-center mt-4 text-gray-500">No more teachers</p>
+          )}
+        </div>
+      )}
 
       {/* Purpose Popup */}
       {showPopup && (
@@ -294,6 +268,7 @@ function StatusInfo({ user }) {
           </div>
         </div>
       )}
+
     </div>
   );
 }

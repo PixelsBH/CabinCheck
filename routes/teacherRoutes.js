@@ -12,7 +12,7 @@ import {
 const router = express.Router();
 
 // Routes
-router.get("/", getAllTeachers); // Fetch all teachers
+router.get("/all", getAllTeachers); // Fetch all teachers
 router.get("/search", searchTeachers); // Search teachers by name
 router.post("/", createTeacher); // Create a new teacher
 router.get("/:firebaseUID", getTeacherById); // Fetch a teacher by ID

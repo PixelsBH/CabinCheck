@@ -1,9 +1,11 @@
+import http from "http";
 import express from "express";
 import mongoose from "mongoose";
 import connectDB from "./config/db.js";
 import cors from "cors"; 
 import dotenv from "dotenv";
 import { verifyFirebaseToken } from "./middlewares/authMiddleware.js";
+import { Server } from "socket.io";
 
 dotenv.config();
 
@@ -42,7 +44,38 @@ app.get("/", (req, res) => {
   res.send("Backend server is running. Use the API routes to interact.");
 });
 
-mongoose.connection.once('open', () => {
-  console.log("Connected to MongoDB");
-  app.listen(PORT, '0.0.0.0', () => console.log(`Server running on http://192.168.56.1:${PORT}`)); // Replace with your IPv4 address
+// Create raw HTTP server
+const server = http.createServer(app);
+
+// Initialize Socket.IO
+export const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
+
+// Store connected students
+const connectedStudents = new Map();
+
+io.on("connection", (socket) => {
+  socket.on("join", (firebaseUID) => {
+    connectedStudents.set(firebaseUID, socket.id);
+  });
+
+  socket.on("disconnect", () => {
+    for (let [uid, id] of connectedStudents.entries()) {
+      if (id === socket.id) {
+        connectedStudents.delete(uid);
+        break;
+      }
+    }
+  });
+});
+
+// Connect Mongo and start server
+connectDB().then(() => {
+  server.listen(PORT, '192.168.56.1', () => {
+    console.log(`Server running on http://192.168.56.1:${PORT}`);
+  });
 });

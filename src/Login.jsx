@@ -120,28 +120,45 @@ function Login({ setUser, user, isDark }) { // Accept user as prop
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-white text-black dark:bg-black dark:text-white">
-      <div className="text-center w-11/12 max-w-md">
+  <div className="flex justify-center items-center min-h-screen bg-white text-black dark:bg-black dark:text-white">
+    <div className="flex flex-col justify-between text-center w-11/12 max-w-md p-6 bg-white dark:bg-black">
+      
+      {/* Logo and Description */}
+      <div>
         <NavLink to="/">
-          <img src={isDark? "CClogoB.jpg": "CClogoW.jpg"} alt="Logo" className="w-48 mx-auto mb-4" />
+          <img 
+            src={isDark ? "CClogoB.jpg" : "CClogoW.jpg"} 
+            alt="Logo" 
+            className="w-48 mx-auto mb-4" 
+          />
         </NavLink>
         <p className="text-sm mb-6">
           Cabin Check helps students quickly find professors and check their real-time availability in their cabins, ensuring efficient campus communication.
         </p>
+      </div>
+
+      {/* Centered Google Login Button */}
+      <div className="flex flex-col items-center">
         <button
           onClick={handleGoogleLogin}
-          className="flex items-center justify-center bg-neutral-800 text-white px-4 py-2 rounded-lg hover:bg-neutral-700 transition"
+          className="flex items-center justify-center bg-neutral-800 text-white px-6 py-3 rounded-lg hover:bg-neutral-700 transition mb-4"
           disabled={loggingIn}
         >
           <img src="/google_icon.png" alt="Google Logo" className="w-5 mr-2" />
           {loggingIn ? "Signing in..." : "Continue with Google"}
         </button>
         {loggingIn && (
-          <div className="mt-4 text-gray-500">Signing in, please wait...</div>
+          <div className="mt-2 text-gray-500">Signing in, please wait...</div>
         )}
       </div>
+
+      {/* Footer */}
+      <div className="text-xs text-gray-500 dark:text-gray-400 mt-4">
+        Login using your IIITK email only
+      </div>
     </div>
-  );
+  </div>
+);
 }
 
 export default Login;

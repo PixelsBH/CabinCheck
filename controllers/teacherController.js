@@ -1,11 +1,27 @@
 import Teacher from "../models/Teacher.js";
 import Student from "../models/Student.js";
+import { io } from "../server.js"; 
 
 // Fetch all teachers
 export const getAllTeachers = async (req, res) => {
   try {
-    const teachers = await Teacher.find();
-    res.status(200).json(teachers);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const teachers = await Teacher.find()
+      .sort({ name: 1 })
+      .skip(skip)
+      .limit(limit);
+
+    const total = await Teacher.countDocuments();
+
+    res.json({
+      teachers,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+    });
   } catch (error) {
     res.status(500).json({ message: "Error fetching teachers", error: error.message });
   }
@@ -96,6 +112,12 @@ export const updateTeacherStatus = async (req, res) => {
 
     teacher.status = !teacher.status; // Toggle the status
     await teacher.save();
+
+    // Emit the updated status to all connected clients
+    io.emit("teacherStatusUpdate", {
+      email: teacher.email,
+      status: teacher.status,
+    });
 
     res.status(200).json(teacher);
   } catch (error) {
