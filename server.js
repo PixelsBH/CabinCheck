@@ -1,11 +1,16 @@
 import http from "http";
 import express from "express";
-import mongoose from "mongoose";
 import connectDB from "./config/db.js";
 import cors from "cors"; 
 import dotenv from "dotenv";
 import { verifyFirebaseToken } from "./middlewares/authMiddleware.js";
 import { Server } from "socket.io";
+
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
@@ -29,6 +34,9 @@ app.use(cors({ origin: "*" })); // Allow requests from any origin
 
 // Connect to MongoDB
 connectDB();
+
+// Serve React frontend
+app.use(express.static(path.join(__dirname, "dist")));
 
 // Routes
 app.use("/routes/auth", authRoutes);
@@ -71,6 +79,11 @@ io.on("connection", (socket) => {
       }
     }
   });
+});
+
+// Catch-all to serve index.html for SPA routing
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
 });
 
 // Connect Mongo and start server
