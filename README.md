@@ -30,16 +30,24 @@ Dashboard with dark and light mode
   <img src="assets/DashboardLight.png" width="600"/>
 </p>
 Adjusted UI and for mobile device
-![MobileDashboard](<assets/MobileDashboard.png>)
-![MobileSidebar](<assets/MobileSidebar.png>)
+<p align="center">
+  <img src="assets/MobileDashboard.png" width="600"/>
+  <img src="assets/MobileSidebar.png" width="600"/>
+</p>
 Profile Page with Year and Department auto adjusted from college email
-![ProfilePage](<assets/ProfilePage.png>)
+<p align="center">
+  <img src="assets/ProfilePage.png" width="600"/>
+</p>
 Status Page with Searching and Requesting meeting function
-![StatusPage](<assets/StatusPage.png>)
-![SearchFunction](<assets/SearchFunction.png>)
-![CreatingRequest](<assets/CreatingRequest.png>)
+<p align="center">
+</p>
+  <img src="assets/StatusPage.png" width="600"/>
+  <img src="assets/SearchFunction.png" width="600"/>
+  <img src="assets/CreatingRequest.png" width="600"/>
 Meeting Request Page
-![MeetingRequestPage](<assets/MeetingRequestPage.png>)
+<p align="center">
+  <img src="assets/MeetingRequestPage.png" width="600"/>
+</p>
 
 ## Installation
 
