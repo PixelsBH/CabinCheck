@@ -72,7 +72,7 @@ function App() {
   if (loading) return <Loading isDark={isDark} />;
 
   return (
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       {/* Show Navbar + Sidebar only if user is logged in */}
       {user && (
         <Navbar

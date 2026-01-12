@@ -88,7 +88,7 @@ app.get("*", (req, res) => {
 
 // Connect Mongo and start server
 connectDB().then(() => {
-  server.listen(PORT, '192.168.56.1', () => {
-    console.log(`Server running on http://192.168.56.1:${PORT}`);
+  server.listen(PORT, '172.16.204.1', () => {
+    console.log(`Server running on http://localhost:${PORT}`);
   });
 });

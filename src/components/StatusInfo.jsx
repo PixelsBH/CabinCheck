@@ -9,7 +9,7 @@ import { io } from 'socket.io-client';
 import TeacherCard from './TeacherCard';
 
 // Connect to your backend Socket.IO server
-const socket = io("http://192.168.56.1:5000");
+const socket = io("http://172.16.204.1:5000");
 
 function StatusInfo({ user }) {
   const [searchTerm, setSearchTerm] = useState('');
