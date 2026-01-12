@@ -22,6 +22,23 @@ Cabin Check is built as a cross-platform system, with a web interface for studen
 **Database**
 - MongoDB Atlas
 
+## Screenshots
+
+Dashboard with dark and light mode
+![DashboardDark](<assets/DashboardDark.png>)
+![DashboardLight](<assets/DashboardLight.png>)
+Adjusted UI and for mobile device
+![MobileDashboard](<assets/MobileDashboard.png>)
+![MobileSidebar](<assets/MobileSidebar.png>)
+Profile Page with Year and Department auto adjusted from college email
+![ProfilePage](<assets/ProfilePage.png>)
+Status Page with Searching and Requesting meeting function
+![StatusPage](<assets/StatusPage.png>)
+![SearchFunction](<assets/SearchFunction.png>)
+![CreatingRequest](<assets/CreatingRequest.png>)
+Meeting Request Page
+![MeetingRequestPage](<assets/MeetingRequestPage.png>)
+
 ## Installation
 
 ### Website(Student)
