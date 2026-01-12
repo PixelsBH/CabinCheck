@@ -6,7 +6,7 @@ const MeetingSchema = new mongoose.Schema({
   rollNo: { type: String, required: true }, // Student's roll number
   purpose: { type: String, required: true }, // Purpose of the meeting
   timeAllotted: { type: String, required: true, default: "Not Allotted" }, // Time allotted for the meeting
-  status: { type: String, enum: ["Pending", "Approved", "Rejected"], default: "Pending" },
+  status: { type: String, enum: ["Pending", "Accepted", "Rejected"], default: "Pending" },
   createdAt: { type: Date, default: Date.now }, // Add createdAt field
 });
 

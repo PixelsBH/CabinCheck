@@ -1,26 +1,42 @@
 # Cabin Check
 
-Cabin Check helps students quickly find professors and check their real-time availability in their cabins, ensuring efficient campus communication. It also allows professors to check their schedules, add calender events, send reminders to students.
+**Cabin Check** is a campus communication platform designed to help students quickly locate professors and view their real-time cabin availability. The system streamlines meeting requests, notifications, and availability updates, improving overall academic coordination.
 
-This is a Flutter and React Project with Express.js and Node.js for backend and MongoDB Atlas for database. Currently it is made with the goal of helping students and professors of IIIT Kottayam.
+The platform supports:
+- Real-time professor availability tracking.
+- Student-to-professor meeting requests with approval and scheduling.
+- Broadcast notifications from professors to specific years or batches.
+- Push notification to app when new meeting is requested.
+Cabin Check is built as a cross-platform system, with a web interface for students and a mobile application for professors.
 
-## Installtion
+## Tech Stack
 
-NOTE: API Keys and their instructions are mentioned in api_keys.pdf
+**Frontend**
+- React (Web – Students)
+- Flutter (Android App – Professors)
+
+**Backend**
+- Node.js
+- Express.js
+
+**Database**
+- MongoDB Atlas
+
+## Installation
 
 ### Website(Student)
 
-1. Run `npm install`
+1. Run `npm install` to install dependencies
 
-2. Use vscode search function to find local ip (eg. 172.16.204.1) and replace with your own local IPv4
+2. Create an environment file:
+- Rename env to .env
+- Set MONGO_URI and VITE_BASE_URL to your IPv4 address(optional) in .env
 
-3. Run `npm run dev`
-
-4. Open http://localhost:5173/ on browser (might be opened automatically).
+3. Run `npm run dev` to start development server.
 
 ### App (Teacher)
 
-Note 1: Make sure to run `npm run dev` first to start the backend server.
+**Important:** Ensure the backend server is running `npm run dev` before launching the app..
 
 **Prerequisites**
 <ul>
@@ -39,7 +55,7 @@ Note 1: Make sure to run `npm run dev` first to start the backend server.
 
 3. Build or run APK using `flutter build apk --debug` or `flutter run`
 
-Note: It might throw error saying build not found because it searches for the APK in `build/app/outputs/flutter-apk/` but the APK was generated in `android/app/build/outputs/apk/debug/app-debug.apk`. So copy the apk to the correct folder and run `flutter run` again.
+**Known Issue:** It might throw error stating build not found since flutter searches for the APK in `build/app/outputs/flutter-apk/` but the APK was generated in `android/app/build/outputs/apk/debug/app-debug.apk`. If it occurs, copy the apk to the expected directory and run `flutter run` again.
 
 **Android Studio Method**
 
