@@ -29,22 +29,22 @@ Cabin Check is built as a cross-platform system, with a web interface for studen
   <img src="assets/DashboardDark.png" width="600"/>
   <img src="assets/DashboardLight.png" width="600"/>
 </p>
-**Adjusted UI and for mobile device**
+<b>Adjusted UI and for mobile device</b>
 <p align="center">
-  <img src="assets/MobileDashboard.png" width="200"/>
-  <img src="assets/MobileSidebar.png" width="200"/>
+  <img src="assets/MobileDashboard.png" width="300"/>
+  <img src="assets/MobileSidebar.png" width="300"/>
 </p>
-**Profile Page with Year and Department auto adjusted from college email**
+<b>Profile Page with Year and Department auto adjusted from college email</b>
 <p align="center">
   <img src="assets/ProfilePage.png" width="600"/>
 </p>
-**Status Page with Searching and Requesting meeting function**
+<b>Status Page with Searching and Requesting meeting function</b>
 <p align="center">
   <img src="assets/StatusPage.png" width="600"/>
   <img src="assets/SearchFunction.png" width="600"/>
   <img src="assets/CreatingRequest.png" width="600"/>
 </p>
-**Meeting Request Page**
+<b>Meeting Request Page</b>
 <p align="center">
   <img src="assets/MeetingRequestPage.png" width="600"/>
 </p>
