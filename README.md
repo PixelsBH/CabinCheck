@@ -25,8 +25,10 @@ Cabin Check is built as a cross-platform system, with a web interface for studen
 ## Screenshots
 
 Dashboard with dark and light mode
-![DashboardDark](<assets/DashboardDark.png>)
-![DashboardLight](<assets/DashboardLight.png>)
+<p align="center">
+  <img src="assets/DashboardDark.png" width="600"/>
+  <img src="assets/DashboardLight.png" width="600"/>
+</p>
 Adjusted UI and for mobile device
 ![MobileDashboard](<assets/MobileDashboard.png>)
 ![MobileSidebar](<assets/MobileSidebar.png>)
