@@ -1,0 +1,2 @@
+MONGO_URI=<mongo-api-key>
+VITE_BASE_URL=http://0.0.0.0:5000

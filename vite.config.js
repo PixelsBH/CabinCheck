@@ -8,7 +8,7 @@ export default defineConfig({
     open: true,
     host: true, // Allow access from the local network
     proxy: {
-      "/routes": "http://localhost:5000", 
+      "/routes": process.env.VITE_BASE_URL, 
     },
   },
   resolve: {

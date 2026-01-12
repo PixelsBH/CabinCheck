@@ -88,7 +88,7 @@ app.get("*", (req, res) => {
 
 // Connect Mongo and start server
 connectDB().then(() => {
-  server.listen(PORT, '172.16.204.1', () => {
+  server.listen(PORT, new URL(process.env.VITE_BASE_URL).hostname, () => {
     console.log(`Server running on http://localhost:${PORT}`);
   });
 });

@@ -9,7 +9,7 @@ import { io } from 'socket.io-client';
 import TeacherCard from './TeacherCard';
 
 // Connect to your backend Socket.IO server
-const socket = io("http://172.16.204.1:5000");
+const socket = io(import.meta.env.VITE_BASE_URL);
 
 function StatusInfo({ user }) {
   const [searchTerm, setSearchTerm] = useState('');

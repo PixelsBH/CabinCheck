@@ -2,7 +2,7 @@ import axios from "axios";
 import { getAuth } from "firebase/auth";
 
 const api = axios.create({
-  baseURL: "http://172.16.204.1:5000/routes",
+  baseURL: import.meta.env.VITE_BASE_URL + "/routes",
 });
 
 // Add token before every request

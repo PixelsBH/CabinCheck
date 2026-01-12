@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { io } from 'socket.io-client';
 import api from '../api';
 
-const socket = io("http://172.16.204.1:5000");
+const socket = io(import.meta.env.VITE_BASE_URL);
 
 export default function TeacherCard({ teacher, userId, openPopup }) {
   const [status, setStatus] = useState(teacher.status || false);
