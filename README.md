@@ -91,3 +91,33 @@ Cabin Check is built as a cross-platform system, with a web interface for studen
 2. Either start an emulator from AVD Manager or connect your Android phone with USB Debugging enabled.
 
 3. Click the green Run button (or Shift + F10). Android Studio will build the app and install it to the selected device
+
+## Performance Benchmarking
+
+To evaluate backend scalability and stability, the Cabin Check API was benchmarked using **k6**, an open-source load testing tool. The goal was to simulate concurrent student requests accessing protected API endpoints under realistic authenticated workloads.
+
+### Test Environment
+
+- **Backend:** Node.js + Express
+- **Database:** MongoDB Atlas
+- **Authentication:** Firebase Authentication (JWT verification)
+- **Load Testing Tool:** k6
+- **Test Duration:** ~3.5 minutes per run
+- **Endpoint Tested:** Student pinned faculty endpoint (authenticated)
+
+---
+
+## Load Testing Configuration
+
+Example k6 configuration used during benchmarking:
+
+```javascript
+export const options = {
+  stages: [
+    { duration: '30s', target: 75 },
+    { duration: '1m', target: 75 },
+    { duration: '30s', target: 150 },
+    { duration: '1m', target: 150 },
+    { duration: '30s', target: 0 },
+  ],
+};
