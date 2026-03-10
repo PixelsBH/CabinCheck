@@ -92,24 +92,64 @@ Cabin Check is built as a cross-platform system, with a web interface for studen
 
 3. Click the green Run button (or Shift + F10). Android Studio will build the app and install it to the selected device
 
-## Performance Benchmarking
+## Backend Benchmark Results
 
-To evaluate backend scalability and stability, the Cabin Check API was benchmarked using **k6**, an open-source load testing tool. The goal was to simulate concurrent student requests accessing protected API endpoints under realistic authenticated workloads.
+The Cabin Check backend was load-tested using **k6** to measure API throughput, latency, and system stability under concurrent authenticated traffic.
 
-### Test Environment
-
-- **Backend:** Node.js + Express
-- **Database:** MongoDB Atlas
-- **Authentication:** Firebase Authentication (JWT verification)
-- **Load Testing Tool:** k6
-- **Test Duration:** ~3.5 minutes per run
-- **Endpoint Tested:** Student pinned faculty endpoint (authenticated)
+Tests targeted a protected student endpoint with **Firebase Authentication enabled**, simulating real-world usage.
 
 ---
 
-## Load Testing Configuration
+## Stable Load Test
 
-Example k6 configuration used during benchmarking:
+**Concurrent Users:** 150  
+**Test Duration:** ~3.5 minutes  
+**Authentication:** Enabled (Firebase JWT verification)
+
+| Metric | Result |
+|------|------|
+| Requests/sec | **~68 RPS** |
+| Total Requests | **14,367** |
+| Error Rate | **0%** |
+| Average Latency | **1.41s** |
+| Median Latency | **1.06s** |
+| p95 Latency | **2.03s** |
+
+The system maintained **stable performance with no request failures** during sustained authenticated load.
+
+---
+
+## Stress Test
+
+**Concurrent Users:** 600  
+**Test Duration:** ~3.5 minutes
+
+| Metric | Result |
+|------|------|
+| Requests/sec | **~70 RPS** |
+| Total Requests | **14,866** |
+| Error Rate | **0%** |
+| Average Latency | **4.93s** |
+| p95 Latency | **8.03s** |
+
+Even at extreme concurrency levels, the backend remained **stable with no crashes or failed requests**, though latency increased due to request queueing.
+
+---
+
+## Key Takeaways
+
+- Backend sustains **~70 authenticated requests/sec**
+- System remained **100% stable during load and stress testing**
+- Successfully handled **150 concurrent users under sustained load**
+- Stress-tested up to **600 concurrent users** without failures
+
+---
+
+## Benchmarking Tool
+
+Load testing performed using **k6**.
+
+Example configuration:
 
 ```javascript
 export const options = {
