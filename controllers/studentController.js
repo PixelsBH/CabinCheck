@@ -78,9 +78,9 @@ export const updateStudent = async (req, res) => {
 
 export const togglePinTeacher = async (req, res) => {
   try {
-    const firebaseUID = req.userId; // authenticated student's firebaseUID
+    const firebaseUID = req.user.uid; // authenticated student's firebaseUID
     const teacherEmail = req.params.email; // teacher's email from URL param
-    const student = await Student.findOne( firebaseUID );
+    const student = await Student.findOne( { firebaseUID } );
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
     }
@@ -111,13 +111,13 @@ export const togglePinTeacher = async (req, res) => {
 
 export const getPinnedTeachers = async (req, res) => {
   try {
-    const firebaseUID = req.params.id; // from URL param
-    const student = await Student.findOne(firebaseUID).populate("pinnedTeachers");
+    const firebaseUID = req.params.firebaseUID; // from URL param
+    const student = await Student.findOne({ firebaseUID }).populate("pinnedTeachers");
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
     }
 
-    const teachers = await Teacher.find({ email: { $in: student.pinnedTeachers } });
+    const teachers = await Teacher.find({ email: { $in: student.pinnedTeachers } }).lean();
 
     res.json(teachers);
   } catch (error) {

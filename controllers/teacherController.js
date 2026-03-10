@@ -84,13 +84,14 @@ export const getTeacherById = async (req, res) => {
 // Update a teacher
 export const updateTeacher = async (req, res) => {
   try {
+    const { firebaseUID } = req.params;
     if (!firebaseUID) {
       return res.status(404).json({ message: "Invalid firebaseUID" });
     }
-    const { name, email, status, office, image, firebaseUID, note } = req.body;
-    const updatedTeacher = await Teacher.findByIdAndUpdate(
+    const { name, email, status, office, image, note } = req.body;
+    const updatedTeacher = await Teacher.findOneAndUpdate(
       { firebaseUID },
-      { name, email, status, office, image, firebaseUID, note },
+      { name, email, status, office, image, note },
       { new: true }
     );
     if (!updatedTeacher) {
@@ -151,7 +152,7 @@ export const updateFcmToken = async (req, res) => {
 export const searchTeachers = async (req, res) => {
   try {
     const { query } = req.query;
-    const studentId = req.userId; // assume middleware set this
+    const studentId = req.user.uid; // assume middleware set this
 
     // Search by name or email
     const teachers = await Teacher.find({

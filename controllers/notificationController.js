@@ -3,7 +3,7 @@ import Notification from "../models/Notifications.js";
 // Fetch all notifications
 export const getAllNotifications = async (req, res) => {
   try {
-    const notifications = await Notification.find();
+    const notifications = await Notification.find().lean();
     res.status(200).json(notifications);
   } catch (error) {
     res.status(500).json({ message: "Error fetching notifications", error: error.message });
@@ -34,7 +34,7 @@ export const createNotification = async (req, res) => {
 // Fetch a single notification by teacher's name
 export const getNotificationByTeacher = async (req, res) => {
   try {
-    const notifications = await Notification.find({ teacher: req.params.teacher });
+    const notifications = await Notification.find({ teacher: req.params.teacher }).lean();
     if (!notifications) {
       return res.status(201).json({ message: "No existing notification" });
     }
@@ -64,7 +64,7 @@ export const getNotificationsForRoll = async (req, res) => {
         { $or: [{ years: year }, { years: 'all' }] },
         { departments: { $in: [dept, 'ALL'] } },
       ],
-    }).sort({ date: -1 });
+    }).sort({ date: -1 }).lean();
 
     res.status(200).json(notifications);
   } catch (error) {

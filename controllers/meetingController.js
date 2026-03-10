@@ -8,7 +8,7 @@ export const getAllMeetings = async (req, res) => {
     const { name } = req.params; // Extract the student's name from the route parameter
 
     // Fetch meetings where the student matches the provided name
-    const meetings = await Meeting.find({ student: name }); // Removed .populate()
+    const meetings = await Meeting.find({ student: name }).lean(); // Removed .populate()
 
     res.status(200).json(meetings);
   } catch (error) {
@@ -68,7 +68,7 @@ export const createMeeting = async (req, res) => {
 export const getMeetingsByTeacherEmail = async (req, res) => {
   try {
     const { email } = req.params; // Extract the teacher's email from the route parameter
-    const meetings = await Meeting.find({ teacher: email }); // Fetch meetings by teacher email
+    const meetings = await Meeting.find({ teacher: email }).lean(); // Fetch meetings by teacher email
     if (!meetings || meetings.length === 0) {
       return res.status(404).json({ message: "No meetings found for the given teacher email" });
     }
