@@ -22,7 +22,16 @@ Cabin Check is built as a cross-platform system, with a web interface for studen
 **Database**
 - MongoDB Atlas
 
+
 ## Screenshots
+
+**Flutter App**
+
+<p align="center">
+
+  <img src="assets/app.png" width="600"/>
+
+</p>
 
 **Dashboard with dark and light mode**
 <p align="center">
