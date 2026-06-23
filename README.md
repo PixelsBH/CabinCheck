@@ -29,7 +29,7 @@ Cabin Check is built as a cross-platform system, with a web interface for studen
 
 <p align="center">
 
-  <img src="assets/app.png" width="600"/>
+  <img src="assets/apps.png" width="600"/>
 
 </p>
 
